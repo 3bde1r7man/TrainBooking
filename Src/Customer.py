@@ -6,7 +6,6 @@ class Customer():
         self.DOB  = ""
         self.email = ""
         self.password = ""
-        self.phone = ""
     
     def signIn(self):
         email = input("Enter your email address: ")
@@ -21,9 +20,12 @@ class Customer():
         else:
             if cursor.fetchone()[0] == password:
                 print("Login successful\n")
-                cursor.execute(f''' SELECT name FROM Customer WHERE email = "{email}" ''')
-                name = cursor.fetchone()
-                print(f"Welcome {name}\n")
+                cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
+                self.name = cursor.fetchone()[0]
+                self.DOB = cursor.fetchone()[1]
+                self.email = cursor.fetchone()[2]
+                self.password = cursor.fetchone()[3]
+                print(f"Welcome {self.name}\n")
                 return True
             else:
                 print("Error\n")

@@ -43,8 +43,11 @@ class Admin():
         else:
             cursor.execute(f''' SELECT password FROM Admin WHERE adminId = "{adminId}" ''')
             if cursor.fetchone() == password:
-                cursor.execute(f''' SELECT name FROM Admin WHERE adminId = "{adminId}" ''')
-                name = cursor.fetchone()
-                print(f"Welcome {name}\n")
+                cursor.execute(f''' SELECT adminId, name, email, password  FROM Admin WHERE adminId = "{adminId}" ''')
+                self.adminId = cursor.fetchone()[0]
+                self.name = cursor.fetchone()[1]
+                self.email = cursor.fetchone()[2]
+                self.password = cursor.fetchone()[3]
+                print(f"Welcome {self.name}\n")
             else:
                 print("Error\n")
