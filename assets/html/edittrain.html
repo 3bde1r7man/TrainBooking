@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EgyptRail - Edit Train</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <!-- Add any additional CSS files or stylesheets -->
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">EgyptRail</a>
+            <!-- Add navigation links if needed -->
+        </div>
+    </nav>
+
+    <!-- Edit Train section -->
+    <section class="edit-train py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2>Edit Train</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="trainName">Train Name</label>
+                            <input type="text" class="form-control" id="trainName" value="Example Train" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trainNumber">Train Number</label>
+                            <input type="text" class="form-control" id="trainNumber" value="123456" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="source">Source</label>
+                            <input type="text" class="form-control" id="source" value="Cairo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" class="form-control" id="destination" value="Alexandria" required>
+                        </div>
+                        <!-- Add more train details fields as needed -->
+
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-4">
+        <div class="container text-center">
+            <p>&copy; 2023 EgyptRail. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- Add any additional JavaScript files or scripts -->
+
+</body>
+
+</html>
