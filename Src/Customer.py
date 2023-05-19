@@ -6,6 +6,7 @@ class Customer():
         self.DOB  = ""
         self.email = ""
         self.password = ""
+        self.phone = []
     
     def signUp(self):
         name = input("Enter your name: ")

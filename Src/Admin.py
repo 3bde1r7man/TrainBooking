@@ -8,26 +8,29 @@ class Admin():
         self.adminId = ""
     
     def signUp(self):
-        name = input("Enter your name: ")
-        email = input("Enter your email address: ")
-        password = input("Enter your password: ")
+        self.name = input("Enter your name: ")
+        self.email = input("Enter your email address: ")
+        self.password = input("Enter your password: ")
 
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
-        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{email}" ''')
+        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{self.email}" ''')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT INTO Admin (name, email, password) VALUES ("{name}", "{email}", "{password}") ''')
+            cursor.execute(f''' INSERT INTO Admin (name, email, password) VALUES ("{self.name}", "{self.email}", "{self.password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{email}" ''')
+            cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{self.email}" ''')
             if cursor.fetchone() == None:
                 print("Error\n")
             else:
                 self.adminId = cursor.fetchone()[0]
                 print("Account created successfully\n")
-                return
+                return True
         else:
             print("Email already exists!\n")
+        
+        conn.close()
+        return False
 
 
     def signIn(self):
@@ -51,8 +54,12 @@ class Admin():
                 self.email = row[2]
                 self.password = row[3]
                 print(f"Welcome {self.name}\n")
+                return True
             else:
                 print("Error\n")
+        
+        conn.close()
+        return False
 
     #def upadteCustomerDetails():
 
