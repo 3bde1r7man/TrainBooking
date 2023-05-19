@@ -49,14 +49,14 @@ class Customer():
 
         cursor.execute(f''' SELECT email FROM Customer WHERE email = "{email}" ''')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{name}", "{DOB}", "{email}", "{password}") ''')
+            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{name}", "{dob_sqlite}", "{email}", "{password}") ''')
             conn.commit()
             cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{email}" ''')
             if cursor.fetchone() == None:
                 print("Error\n")
             else:
                 print("Account created successfully\n")
-                cursor.execute(f'''INSERT INTO Customer_PhoneNum (cusmerIdm, phoneNum) values ("{cursor.fetchone()[0]}","{phone}") ''')
+                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{cursor.fetchone()[0]}","{phone}") ''')
                 conn.commit()
                 return True
         else:
