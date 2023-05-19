@@ -64,47 +64,37 @@ class Admin:
         conn.close()
         return True
 
-    def add_trip(self, src, dist, departs, arrives, price):
-        trip = Trip()
-        trip.src = src
-        trip.dist = dist
-        trip.departs = departs
-        trip.arrives = arrives
-        trip.price = price
-        trip.add_trip_to_database()
+    #def upadteCustomerDetails():
+
+    def addTrain(self,name,description,classes):
+        train = Train()
+        train.name = input("Enter train name: ")
+        train.description = input("Enter train description: ")
+        train.classes = train.Class()
+        train.addTrain(train, self.adminId)
+        return
     
-    def update_trip(self, trip_id, src, dist, departs, arrives, price):
-        trip = Trip()
-        trip.src = src
-        trip.dist = dist
-        trip.departs = departs
-        trip.arrives = arrives
-        trip.price = price
-        trip.update_trip_to_database(trip_id)
-
-    def update_name(self, name):
+    def editTrain(self):
+        train = Train()
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        cursor.execute('''UPDATE Admin SET name = ? WHERE adminId = ?''', (name, self.adminId))
-        conn.commit()
-        conn.close()
-
-    def update_email(self, email):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        cursor.execute('''UPDATE Admin SET email = ? WHERE adminId = ?''', (email, self.adminId))
-        conn.commit()
-        conn.close()
-
-    def update_password(self, old_password, new_password):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        cursor.execute('''SELECT password FROM Admin WHERE adminId = ?''', (self.adminId,))
-        stored_password = cursor.fetchone()
-        if stored_password is None or stored_password[0] != old_password:
-            conn.close()
-            raise ValueError("Invalid old password.")
-
-        cursor.execute('''UPDATE Admin SET password = ? WHERE adminId = ?''', (new_password, self.adminId))
-        conn.commit()
-        conn.close()
+        cursor.execute('SELECT trainId, name, adminId, details FROM Train')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row[0] + " - " + row[1] + " - " + row[2] + " - " + row[3])
+        choose = int(input("Select the train to edit: "))
+        cursor.execute(f'SELECT name, adminId, details FROM Train WHERE trainId = "{choose}"')
+        row = cursor.fetchone()
+        train.name = row[0]
+        train.description = row[2]
+        train.getClasses(train,choose)
+        whatToEdit = int(input("What to edit\n1- Train\n2- classes in the train\n-->"))
+        if whatToEdit == 1:
+            train.name = input("Enter train name: ")
+            train.description = input("Enter train description: ")
+            train.editTrain(train, choose)
+        elif whatToEdit == 2:
+            whichClass = int(input("Enter which class to edit: "))
+            train.classes[whichClass][1] = input("Enter number of seats in "+ train.classes[whichClass][0][0] + " for train: ")
+            train.editTrainClass(train, whichClass)
+        return
