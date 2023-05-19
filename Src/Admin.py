@@ -20,10 +20,11 @@ class Admin():
             cursor.execute(f''' INSERT INTO Admin (name, email, password) VALUES ("{self.name}", "{self.email}", "{self.password}") ''')
             conn.commit()
             cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{self.email}" ''')
-            if cursor.fetchone() == None:
+            adminId = cursor.fetchone()
+            if adminId == None:
                 print("Error\n")
             else:
-                self.adminId = cursor.fetchone()[0]
+                self.adminId = adminId[0]
                 print("Account created successfully\n")
                 return True
         else:
