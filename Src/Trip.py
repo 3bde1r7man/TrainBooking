@@ -3,7 +3,7 @@ import sqlite3
 import datetime
 class Trip():
     def __init__(self):
-        self.src
+        self.src = "chicago"
         self.dest
         self.departs
         self.arrives 

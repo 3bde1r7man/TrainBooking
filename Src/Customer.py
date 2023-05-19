@@ -1,37 +1,36 @@
 import sqlite3
-
+import datetime
 class Customer():
     def __init__(self):
         self.name = ""
-        self.DOB  = ""
+        self.DOB  = None
         self.email = ""
         self.password = ""
         self.phone = []
     
     def signUp(self):
-        name = input("Enter your name: ")
-        DOB = input("Enter your Date Of Birth (D/M/Y): ")
-        phone = input("Enter your phone number: ")
-        email = input("Enter your email address: ")
-        password = input("Enter your password: ")
-
-        # Convert DOB to SQLite date format (YYYY-MM-DD)
-        dob_parts = DOB.split('/')
-        dob_sqlite = f"{dob_parts[2]}-{dob_parts[1]}-{dob_parts[0]}"
+        self.name = input("Enter your name: ")
+        dob_input = input("Enter your Date Of Birth (D/M/Y): ")
+        dob_datetime = datetime.datetime.strptime(dob_input, "%d/%m/%Y")
+        self.DOB = dob_datetime.strftime("%Y-%m-%d") 
+        self.phone = input("Enter your phone number: ")
+        self.email = input("Enter your email address: ")
+        self.password = input("Enter your password: ")
 
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
-        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{email}" ''')
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{name}", "{dob_sqlite}", "{email}", "{password}") ''')
+            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{self.name}", "{self.DOB}", "{self.email}", "{self.password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{email}" ''')
-            if cursor.fetchone() == None:
+            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{self.email}" ''')
+            customerId = cursor.fetchone()
+            if customerId == None:
                 print("Error\n")
             else:
                 print("Account created successfully\n")
-                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{cursor.fetchone()[0]}","{phone}") ''')
+                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{customerId[0]}","{self.phone[0]}") ''')
                 conn.commit()
                 return True
         else:
