@@ -16,8 +16,7 @@ class Train():
         cursor.execute(f'SELECT trainId FROM Train WHERE name = "{self.name}", description = "{self.description}")')
         trainId = cursor.fetchone()
         for Class in self.classes:
-            nSeats = input("Enter number of seats in "+ self.classes[Class] + " for train: ")
-            cursor.execute(f'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES ("{trainId[0]}", "{Class}", "{nSeats}")')
+            cursor.execute(f'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES ("{trainId[0]}", "{Class}", "{self.classes[1]}")')
             conn.commit()
         conn.close()
         print("Train added successfully\n")
@@ -26,17 +25,18 @@ class Train():
     def Class(self):
         conn = sqlite3.connect('db.sqlite3')  
         cursor = conn.cursor()
-        cursor.execute('SELECT classId, name, price FROM Class')
+        cursor.execute('SELECT classId, className, price FROM Class')
         rows = cursor.fetchall()
         classdict = {}
         for row in rows:
-            classdict[row[0]] = row[1]
-            print(row[0] + "- " + row[1] + '\n')
+            classdict[row[0]] = [row[1], row[2]]
+            print(row[0] + " - " + row[1] +  " - " + row[2] + '\n')
         
         classes = input("Select the classes that in the Train (1, 2, 3): ")
         classes = classes.split(', ')
         for Class in classes:
-            self.classes[Class] = classdict[Class]
+            nSeats = int(input("Enter the number of Seats for the class " + classdict[Class][0] + "for the Train: "))
+            self.classes[Class] = [classdict[Class], nSeats]
         conn.close()
         return self.classes
 
@@ -63,9 +63,8 @@ class Train():
             conn.commit()
         elif whatToEdit == 2:
             whichClass = int(input("Enter which class to edit: "))
-            nSeats = input("Enter number of seats in "+ self.classes[whichClass] + " for train: ")
-            price = input("Enter price for "+ self.classes[whichClass] + " for train: ")
-            cursor.execute(f'UPDATE TrainClass SET nSeats = "{nSeats}", price = "{price}" WHERE trainId = "{choose}" AND classId = "{whichClass}"')
+            nSeats = input("Enter number of seats in "+ self.classes[whichClass][0][0] + " for train: ")
+            cursor.execute(f'UPDATE TrainClass SET nSeats = "{nSeats}" WHERE trainId = "{choose}" AND classId = "{whichClass}"')
             conn.commit()
         
         conn.close()
@@ -81,5 +80,5 @@ class Train():
         for row in rows:
             print(row[0] + " - " + row[1] + " - " + '\n')
             cursor2.execute(f'SELECT name FROM Class WHERE classId = "{row[0]}"')
-            self.classes[row[0]]= cursor2.fetchone()[0]
+            self.classes[row[0]][0][0]= cursor2.fetchone()[0]
         conn.close()
