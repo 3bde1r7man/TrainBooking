@@ -30,8 +30,8 @@ class main():
             if signAs == 1:
                 admin = Admin()
                 isSigned = admin.signUp()
-                #if isSigned:
-                    # admin.menu()
+                # if isSigned:
+                #     admin.menu()
                 break
             elif signAs == 2:
                 customer = Customer()
