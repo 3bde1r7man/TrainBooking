@@ -17,8 +17,7 @@ class Train():
         trainId = cursor.fetchone()
         for Class in self.classes:
             nSeats = input("Enter number of seats in "+ self.classes[Class] + " for train: ")
-            price = input("Enter price for "+ self.classes[Class] + " for train: ")
-            cursor.execute(f'INSERT INTO TrainClass (trainId, classId, nSeats, price) VALUES ("{trainId[0]}", "{Class}", "{nSeats}", "{price}")')
+            cursor.execute(f'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES ("{trainId[0]}", "{Class}", "{nSeats}")')
             conn.commit()
         conn.close()
         print("Train added successfully\n")
@@ -27,7 +26,7 @@ class Train():
     def Class(self):
         conn = sqlite3.connect('db.sqlite3')  
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM Class')
+        cursor.execute('SELECT classId, name, price FROM Class')
         rows = cursor.fetchall()
         classdict = {}
         for row in rows:
@@ -77,10 +76,10 @@ class Train():
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         cursor2 = conn.cursor()
-        cursor.execute(f'SELECT classId, nSeats, price FROM TrainClass WHERE trainId = "{trainId}"')
+        cursor.execute(f'SELECT classId, nSeats FROM TrainClass WHERE trainId = "{trainId}"')
         rows = cursor.fetchall()
         for row in rows:
-            print(row[0] + " - " + row[1] + " - " + row[2] + '\n')
+            print(row[0] + " - " + row[1] + " - " + '\n')
             cursor2.execute(f'SELECT name FROM Class WHERE classId = "{row[0]}"')
             self.classes[row[0]]= cursor2.fetchone()[0]
         conn.close()

@@ -135,6 +135,7 @@ cursor.execute('''
 CREATE TABLE Class
 (
     classId INTEGER PRIMARY KEY AUTOINCREMENT,
+    price FLOAT NOT NULL,
     className VARCHAR(20) NOT NULL
 );
 ''')
@@ -143,7 +144,6 @@ cursor.execute('''
 CREATE TABLE TrainClass
 (
     nSeats INT NOT NULL,
-    price FLOAT NOT NULL,
     trainId INT NOT NULL,
     classId INT NOT NULL,
     PRIMARY KEY (trainId, classId),
@@ -173,6 +173,7 @@ CREATE TABLE Trip
     dist VARCHAR(20) NOT NULL,
     departs DATE NOT NULL,
     arrives DATE NOT NULL,
+    price FLOAT NOT NULL,
     tripId INTEGER PRIMARY KEY AUTOINCREMENT,
     adminId INT NOT NULL,
     trainId INT NOT NULL,

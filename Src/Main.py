@@ -8,7 +8,7 @@ from Customer import Customer
 # conn = sqlite3.connect('db.sqlite3')  
 # cursor = conn.cursor()
 
-# conn.commit() commit is only after insert or update or delete statements
+# conn.commit() # commit is only after insert or update or delete statements
 # conn.close()
 
 class main():
