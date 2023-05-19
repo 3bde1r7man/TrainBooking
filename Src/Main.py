@@ -1,13 +1,23 @@
+import pyodbc
 import sqlite3
 from Admin import Admin
 from Customer import Customer
+
+
+# server = 'ABDELRHMAN'
+# database = 'TrainBooking'
+
+
+# conn = pyodbc.connect('DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';Trusted_Connection=yes;')
+# cursor = conn.cursor()
+
+# conn.close()
 
 
 # this is how u can use the sqlite database in python
 
 # conn = sqlite3.connect('db.sqlite3')  
 # cursor = conn.cursor()
-
 # conn.commit() # commit is only after insert or update or delete statements
 # conn.close()
 
