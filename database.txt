@@ -123,6 +123,7 @@ cursor.execute('''
 CREATE TABLE Train
 (
     trainId INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(20) NOT NULL,
     adminId INT NOT NULL,
     details VARCHAR(20) NOT NULL,
     FOREIGN KEY (adminId) REFERENCES Admin(adminId)

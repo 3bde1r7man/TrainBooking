@@ -7,32 +7,6 @@ class Customer():
         self.email = ""
         self.password = ""
     
-    def signIn(self):
-        email = input("Enter your email address: ")
-        password = input("Enter your password: ")
-        
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        
-        cursor.execute(f''' SELECT password FROM Customer WHERE email = "{email}" ''')
-        if cursor.fetchone() == None:
-            print("Error\n")
-        else:
-            if cursor.fetchone()[0] == password:
-                print("Login successful\n")
-                cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
-                self.name = cursor.fetchone()[0]
-                self.DOB = cursor.fetchone()[1]
-                self.email = cursor.fetchone()[2]
-                self.password = cursor.fetchone()[3]
-                print(f"Welcome {self.name}\n")
-                return True
-            else:
-                print("Error\n")
-
-        conn.close()
-        return False
-    
     def signUp(self):
         name = input("Enter your name: ")
         DOB = input("Enter your Date Of Birth (D/M/Y): ")
@@ -64,3 +38,34 @@ class Customer():
 
         conn.close()
         return False
+
+
+
+    def signIn(self):
+        email = input("Enter your email address: ")
+        password = input("Enter your password: ")
+        
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        
+        cursor.execute(f''' SELECT password FROM Customer WHERE email = "{email}" ''')
+        if cursor.fetchone() == None:
+            print("Error\n")
+        else:
+            if cursor.fetchone()[0] == password:
+                print("Login successful\n")
+                cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
+                self.name = cursor.fetchone()[0]
+                self.DOB = cursor.fetchone()[1]
+                self.email = cursor.fetchone()[2]
+                self.password = cursor.fetchone()[3]
+                print(f"Welcome {self.name}\n")
+                return True
+            else:
+                print("Error\n")
+
+        conn.close()
+        return False
+    
+
+    

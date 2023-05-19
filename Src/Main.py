@@ -11,18 +11,20 @@ from . import Admin, Customer
 # conn.close()
 
 class main():
-    
+    isSigned = False
     
     def signUp():
         while True:
             signAs = input("1- To sign Up as admin\n2- To sign Up as customer")
             if signAs == 1:
                 admin = Admin()
-                admin.signUp()
+                isSigned = admin.signUp()
+                if isSigned:
+                    admin.
                 break
             elif signAs == 2:
                 customer = Customer()
-                Customer.signUp()
+                isSigned = Customer.signUp()
                 break
             else:
                 print("Invalid Input")
@@ -34,11 +36,11 @@ class main():
             signInAs = input("1- To sign In as admin\n2- To sign In as customer")
             if signInAs == 1:
                 admin = Admin()
-                admin.signIn()
+                isSigned = admin.signIn()
                 break
             elif signInAs == 2:
                 customer = Customer()
-                customer.signIn()
+                isSigned = customer.signIn()
                 break
             else:
                 print("Invalid Input")

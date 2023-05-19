@@ -51,3 +51,9 @@ class Admin():
                 print(f"Welcome {self.name}\n")
             else:
                 print("Error\n")
+
+    #def upadteCustomerDetails():
+
+    def addTrain():
+        description = input("enter the description of the train: ")
+        
