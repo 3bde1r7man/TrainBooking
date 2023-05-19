@@ -57,7 +57,7 @@ class Admin():
                 return True
             else:
                 print("Error\n")
-        
+
         conn.close()
         return False
 
@@ -65,11 +65,34 @@ class Admin():
 
     def addTrain(self):
         train = Train()
-        train.addTrain(self.adminId)
+        train.name = input("Enter train name: ")
+        train.description = input("Enter train description: ")
+        train.classes = train.Class()
+        train.addTrain(train, self.adminId)
         return
     
     def editTrain(self):
         train = Train()
-        train.editTrain(self.adminId)
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('SELECT trainId, name, adminId, details FROM Train')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row[0] + " - " + row[1] + " - " + row[2] + " - " + row[3])
+        choose = int(input("Select the train to edit: "))
+        cursor.execute(f'SELECT name, adminId, details FROM Train WHERE trainId = "{choose}"')
+        row = cursor.fetchone()
+        train.name = row[0]
+        train.description = row[2]
+        train.getClasses(train,choose)
+        whatToEdit = int(input("What to edit\n1- Train\n2- classes in the train\n-->"))
+        if whatToEdit == 1:
+            train.name = input("Enter train name: ")
+            train.description = input("Enter train description: ")
+            train.editTrain(train, choose)
+        elif whatToEdit == 2:
+            whichClass = int(input("Enter which class to edit: "))
+            train.classes[whichClass][1] = input("Enter number of seats in "+ train.classes[whichClass][0][0] + " for train: ")
+            train.editTrainClass(train, whichClass)
         return
 
