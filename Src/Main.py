@@ -1,5 +1,6 @@
 import sqlite3
-from . import Admin, Customer
+from Admin import Admin
+from Customer import Customer
 
 
 # this is how u can use the sqlite database in python
@@ -7,7 +8,7 @@ from . import Admin, Customer
 # conn = sqlite3.connect('db.sqlite3')  
 # cursor = conn.cursor()
 
-# conn.commit()
+# conn.commit() commit is only after insert or update or delete statements
 # conn.close()
 
 class main():
@@ -19,8 +20,8 @@ class main():
             if signAs == 1:
                 admin = Admin()
                 isSigned = admin.signUp()
-                if isSigned:
-                    admin.
+                #if isSigned:
+                    # admin.menu()
                 break
             elif signAs == 2:
                 customer = Customer()

@@ -1,5 +1,5 @@
 import sqlite3
-
+from Train import Train
 class Admin():
     def __init__(self):
         self.name = ""
@@ -19,10 +19,11 @@ class Admin():
         if cursor.fetchone() == None:
             cursor.execute(f''' INSERT INTO Admin (name, email, password) VALUES ("{name}", "{email}", "{password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT email FROM Admin WHERE email = "{email}" ''')
+            cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{email}" ''')
             if cursor.fetchone() == None:
                 print("Error\n")
             else:
+                self.adminId = cursor.fetchone()[0]
                 print("Account created successfully\n")
                 return
         else:
@@ -37,23 +38,31 @@ class Admin():
         cursor = conn.cursor()
         
         cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{email}" ''')
-        adminId = cursor.fetchone()
+        adminId = cursor.fetchone()[0]
         if adminId == None:
             print("Error\n")
         else:
             cursor.execute(f''' SELECT password FROM Admin WHERE adminId = "{adminId}" ''')
             if cursor.fetchone() == password:
                 cursor.execute(f''' SELECT adminId, name, email, password  FROM Admin WHERE adminId = "{adminId}" ''')
-                self.adminId = cursor.fetchone()[0]
-                self.name = cursor.fetchone()[1]
-                self.email = cursor.fetchone()[2]
-                self.password = cursor.fetchone()[3]
+                row = cursor.fetchone()
+                self.adminId = row[0]
+                self.name = row[1]
+                self.email = row[2]
+                self.password = row[3]
                 print(f"Welcome {self.name}\n")
             else:
                 print("Error\n")
 
     #def upadteCustomerDetails():
 
-    def addTrain():
-        description = input("enter the description of the train: ")
-        
+    def addTrain(self):
+        train = Train()
+        train.addTrain(self.adminId)
+        return
+    
+    def editTrain(self):
+        train = Train()
+        train.editTrain(self.adminId)
+        return
+
