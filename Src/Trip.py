@@ -33,7 +33,7 @@ class Trip():
     def update_trip_to_database(self):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        query = "UPDATE Trip SET src=?, dest=?, departs=?, arrives=?, price=? WHERE tripId=?"  # Replace <condition> with the appropriate condition for your update
+        query = "UPDATE Trip SET src=?, dest=?, departs=?, arrives=?, price=? WHERE tripId=?"
 
         values = (self.src, self.dest, self.departs, self.arrives, self.price, self.tripId)
 
