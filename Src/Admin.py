@@ -3,19 +3,30 @@ from Train import Train
 from Trip import Trip
 
 class Admin:
-    def __init__(self):
+    def __init__(self, admin_id=None):
         self.name = ""
         self.email = ""
         self.password = ""
         self.adminId = ""
+        if admin_id is not None:
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            cursor.execute("SELECT adminId, name, email, password FROM admin WHERE adminId=?", (admin_id,))
+            row = cursor.fetchone()
+            if row:
+                self.adminId = row[0]
+                self.name = row[1]
+                self.email = row[2]
+                self.password = row[3]
+            conn.close()
 
-    def signUp(self, name, email, password):
+    def sign_up(self, name, email, password):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
         # Check if email already exists in the Admin table
         cursor.execute('''SELECT email FROM Admin WHERE email = ?''', (email,))
-        if cursor.fetchone() is not None:
+        if cursor.fetchone():
             conn.close()
             raise ValueError("Email already exists!")
 
@@ -26,7 +37,7 @@ class Admin:
         # Retrieve the adminId of the newly inserted row
         cursor.execute('''SELECT adminId FROM Admin WHERE email = ?''', (email,))
         admin_id = cursor.fetchone()
-        if admin_id is not None:
+        if admin_id:
             self.adminId = admin_id[0]
             conn.close()
             return True
@@ -34,14 +45,14 @@ class Admin:
             conn.close()
             raise ValueError("Error occurred while retrieving adminId.")
 
-    def signIn(self, email, password):
+    def sign_in(self, email, password):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
         # Check if email exists in the Admin table
         cursor.execute('''SELECT adminId FROM Admin WHERE email = ?''', (email,))
         admin_id = cursor.fetchone()
-        if admin_id is None:
+        if not admin_id:
             conn.close()
             return False
 
@@ -56,16 +67,15 @@ class Admin:
         # Retrieve the admin details
         cursor.execute('''SELECT adminId, name, email, password FROM Admin WHERE adminId = ?''', (admin_id,))
         row = cursor.fetchone()
-        self.adminId = row[0]
-        self.name = row[1]
-        self.email = row[2]
-        self.password = row[3]
-
+        if row:
+            self.adminId = row[0]
+            self.name = row[1]
+            self.email = row[2]
+            self.password = row[3]
         conn.close()
         return True
 
-
-    def addTrain(self, name, description, classes):
+    def add_train(self, name, description, classes):
         train = Train()
         train.name = name
         train.description = description
@@ -73,15 +83,14 @@ class Admin:
         train.adminId = self.adminId
         train.addTrain()
         return
-    
-    def editTrainClass(self,trainId, classId,n_seats=None):
+
+    def update_train_class(self, trainId, classId, n_seats=None):
         train = Train(trainId)
         train.classes[classId][1] = n_seats
         train.editTrainClass(classId)
-        return  
+        return True
 
-
-    def editTrain(self, trainId, name=None, description=None):
+    def update_train(self, trainId, name=None, description=None):
         train = Train(trainId)
         if name:
             train.name = name
@@ -89,7 +98,7 @@ class Admin:
             train.description = description
         train.editTrain()
         return True
-    
+
     def add_trip(self, src, dest, departs, arrives, price):
         trip = Trip()
         trip.src = src
@@ -130,12 +139,19 @@ class Admin:
     def update_password(self, old_password, new_password):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        cursor.execute('''SELECT password FROM Admin WHERE adminId = ?''', (self.adminId,))
-        stored_password = cursor.fetchone()
-        if stored_password is None or stored_password[0] != old_password:
+        if self.password != old_password:
             conn.close()
             raise ValueError("Invalid old password.")
 
         cursor.execute('''UPDATE Admin SET password = ? WHERE adminId = ?''', (new_password, self.adminId))
         conn.commit()
         conn.close()
+
+    def update_admin(self,email=None,name=None,old_password=None,new_password=None):
+        if email is not None:
+            self.update_email(email)
+        if name is not None:
+            self.update_name(name)
+        if old_password is not None and new_password is not None:
+            self.update_password(old_password, new_password)
+        return True
