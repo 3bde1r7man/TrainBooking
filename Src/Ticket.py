@@ -45,9 +45,14 @@ class Ticket():
             values = (passenger[0], passenger[1], self.ticketId)
             cursor.execute(query, values)
             conn.commit()
+        
+        customer = Customer(self.customerId)
+        values = (customer.name, customer.customerAge(), self.ticketId)
+        cursor.execute(query, values)
+        conn.commit()
         conn.close()
     
-    def deletTicket(self):
+    def deleteTicket(self):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         query = 'DELETE FROM Ticket WHERE TicketId =?'
