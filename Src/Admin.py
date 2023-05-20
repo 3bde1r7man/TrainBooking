@@ -15,11 +15,11 @@ class Admin():
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
-        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{self.email}" ''')
+        cursor.execute(f' SELECT email FROM Admin WHERE email = "{self.email}" ')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT INTO Admin (name, email, password) VALUES ("{self.name}", "{self.email}", "{self.password}") ''')
+            cursor.execute(f' INSERT INTO Admin (name, email, password) VALUES ("{self.name}", "{self.email}", "{self.password}") ')
             conn.commit()
-            cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{self.email}" ''')
+            cursor.execute(f' SELECT adminId FROM Admin WHERE email = "{self.email}" ')
             adminId = cursor.fetchone()
             if adminId == None:
                 print("Error\n")
@@ -41,14 +41,14 @@ class Admin():
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         
-        cursor.execute(f''' SELECT adminId FROM Admin WHERE email = "{email}" ''')
+        cursor.execute(f' SELECT adminId FROM Admin WHERE email = "{email}" ')
         adminId = cursor.fetchone()[0]
         if adminId == None:
             print("Error\n")
         else:
-            cursor.execute(f''' SELECT password FROM Admin WHERE adminId = "{adminId}" ''')
+            cursor.execute(f' SELECT password FROM Admin WHERE adminId = "{adminId}" ')
             if cursor.fetchone() == password:
-                cursor.execute(f''' SELECT adminId, name, email, password  FROM Admin WHERE adminId = "{adminId}" ''')
+                cursor.execute(f' SELECT adminId, name, email, password  FROM Admin WHERE adminId = "{adminId}"')
                 row = cursor.fetchone()
                 self.adminId = row[0]
                 self.name = row[1]
@@ -69,10 +69,10 @@ class Admin():
         train.name = input("Enter train name: ")
         train.description = input("Enter train description: ")
         train.classes = train.Class()
-        train.addTrain(train, self.adminId)
+        train.addTrain(self.adminId)
         return
     
-    def editTrain(self):
+    def editTrain():
         train = Train()
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
@@ -85,15 +85,15 @@ class Admin():
         row = cursor.fetchone()
         train.name = row[0]
         train.description = row[2]
-        train.getClasses(train,choose)
+        train.getClasses(choose)
         whatToEdit = int(input("What to edit\n1- Train\n2- classes in the train\n-->"))
         if whatToEdit == 1:
             train.name = input("Enter train name: ")
             train.description = input("Enter train description: ")
-            train.editTrain(train, choose)
+            train.editTrain(choose)
         elif whatToEdit == 2:
             whichClass = int(input("Enter which class to edit: "))
             train.classes[whichClass][1] = input("Enter number of seats in "+ train.classes[whichClass][0][0] + " for train: ")
-            train.editTrainClass(train, whichClass)
+            train.editTrainClass(whichClass)
         return
 

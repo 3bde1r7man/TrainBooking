@@ -10,9 +10,8 @@ class Customer():
     
     def signUp(self):
         self.name = input("Enter your name: ")
-        dob_input = input("Enter your Date Of Birth (D/M/Y): ")
-        dob_datetime = datetime.datetime.strptime(dob_input, "%d/%m/%Y")
-        self.DOB = dob_datetime.strftime("%Y-%m-%d") 
+        dob_input = input("Enter your Date Of Birth (Y-M-D): ")
+        self.DOB = datetime.datetime.strptime(dob_input, "%Y-%m-%d")
         self.phone = input("Enter your phone number: ")
         self.email = input("Enter your email address: ")
         self.password = input("Enter your password: ")
