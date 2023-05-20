@@ -90,23 +90,28 @@ class Admin:
         train.editTrain()
         return True
     
-    def add_trip(self, src, dist, departs, arrives, price):
+    def add_trip(self, src, dest, departs, arrives, price):
         trip = Trip()
         trip.src = src
-        trip.dist = dist
+        trip.dest = dest
         trip.departs = departs
         trip.arrives = arrives
         trip.price = price
         trip.add_trip_to_database()
 
-    def update_trip(self, trip_id, src, dist, departs, arrives, price):
-        trip = Trip()
-        trip.src = src
-        trip.dist = dist
-        trip.departs = departs
-        trip.arrives = arrives
-        trip.price = price
-        trip.update_trip_to_database(trip_id)
+    def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None):
+        trip = Trip(trip_id)
+        if src:
+            trip.src = src
+        if dest:
+            trip.dest = dest
+        if departs:
+            trip.departs = departs
+        if arrives:
+            trip.arrives = arrives
+        if price:
+            trip.price = price
+        trip.update_trip_to_database()
 
     def update_name(self, name):
         conn = sqlite3.connect('db.sqlite3')
