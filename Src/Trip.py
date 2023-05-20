@@ -29,7 +29,6 @@ class Trip():
         cursor.execute(query, values)
         conn.commit()
         conn.close()
-
     def update_trip_to_database(self):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
