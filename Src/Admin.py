@@ -70,7 +70,8 @@ class Admin:
         train.name = name
         train.description = description
         train.classes = classes
-        train.addTrain(self.adminId)
+        train.adminId = self.adminId
+        train.addTrain()
         return
     
     def editTrainClass(self,trainId, classId,n_seats=None):
