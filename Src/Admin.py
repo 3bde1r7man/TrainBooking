@@ -48,7 +48,7 @@ class Admin():
             print("Error\n")
         else:
             cursor.execute(f''' SELECT password FROM Admin WHERE adminId = "{adminId}" ''')
-            if cursor.fetchone() == password:
+            if cursor.fetchone()[0] == password:
                 cursor.execute(f''' SELECT adminId, name, email, password  FROM Admin WHERE adminId = "{adminId}" ''')
                 row = cursor.fetchone()
                 self.adminId = row[0]
@@ -123,6 +123,58 @@ class Admin():
         conn.commit()
         conn.close()
         return True
+    
+    def update_name(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            self.name =input("please enter your new name: ")
+            cursor.execute(f''' UPDATE Admin SET name="{self.name}" WHERE email = "{self.email}" ''')
+            print("Name updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True
+        
+    def update_password(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            self.password =input("please enter your new password: ")
+            cursor.execute(f''' UPDATE Admin SET password ="{self.password}" WHERE email = "{self.email}" ''')
+            print("Password updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True
+        
+    def update_email(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Admin WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            old_email = self.email
+            self.email =input("please enter your new email: ")
+            cursor.execute(f''' UPDATE Admin SET email ="{self.email}" WHERE email = "{old_email}" ''')
+            print("email updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True    
 
 admin = Admin()
-isSigned = admin.addTrip()
+isSigned = admin.signIn()
