@@ -7,8 +7,9 @@ class Trip():
         self.dest
         self.departs
         self.arrives 
-        self.price 
-        if(tripId !=None):
+        self.price
+        self.tripId = tripId
+        if(tripId != None):
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM Trip WHERE id = {tripId}")
