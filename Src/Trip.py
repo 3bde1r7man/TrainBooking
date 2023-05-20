@@ -13,13 +13,13 @@ class Trip():
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
             cursor.execute(f"SELECT * FROM Trip WHERE tripId = {tripId}")
-            data = cursor.fetchall()
-            first_row = data[0]
-            self.src = first_row[0]
-            self.dest = first_row[1]
-            self.departs = first_row[2]
-            self.arrives = first_row[3]
-            self.price = first_row[4]
+            data = cursor.fetchone()
+            data = data[0]
+            self.src = data[0]
+            self.dest = data[1]
+            self.departs = data[2]
+            self.arrives = data[3]
+            self.price = data[4]
 
     def add_trip_to_database(self, adminId, trainId):
         conn = sqlite3.connect('db.sqlite3')
