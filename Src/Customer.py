@@ -66,5 +66,7 @@ class Customer():
         conn.close()
         return False
     
-
-    
+    def customerAge(self):
+        today = datetime.date.today()
+        age = today.year - self.DOB.year - ((today.month, today.day) < (self.DOB.month, self.DOB.day))
+        return age
