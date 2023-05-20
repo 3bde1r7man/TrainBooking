@@ -64,47 +64,27 @@ class Admin:
         conn.close()
         return True
 
-    #def upadteCustomerDetails():
 
     def addTrain(self, name, description, classes):
         train = Train()
-        # train.name = input("Enter train name: ")
-        # train.description = input("Enter train description: ")
-        # train.Class()
         train.name = name
         train.description = description
         train.classes = classes
         train.addTrain(self.adminId)
         return
     
-    def editTrainClass(name, description, classes):
+    def editTrainClass(self,trainId, classId,n_seats=None):
+        train = Train(trainId)
+        train.classes[classId][1] = n_seats
+        train.editTrainClass(classId)
         return  
 
 
-    def editTrain(name, description, classes, choose = None, whichClass = None):
-        train = Train()
-        # conn = sqlite3.connect('db.sqlite3')
-        # cursor = conn.cursor()
-        # cursor.execute('SELECT trainId, name, adminId, details FROM Train')
-        # rows = cursor.fetchall()
-        # for row in rows:
-        #     print(row[0] + " - " + row[1] + " - " + row[2] + " - " + row[3])
-        # choose = int(input("Select the train to edit: "))
-        # cursor.execute(f'SELECT name, adminId, details FROM Train WHERE trainId = "{choose}"')
-        # row = cursor.fetchone()
-        # train.name = row[0]
-        # train.description = row[2]
-        # train.getClasses(choose)
-        # whatToEdit = int(input("What to edit\n1- Train\n2- classes in the train\n-->"))
-        train.name = name
-        train.description = description
-        train.classes = classes
-        if whatToEdit == 1:
-            # train.name = input("Enter train name: ")
-            # train.description = input("Enter train description: ")
-            train.editTrain(choose)
-        elif whatToEdit == 2:
-            # whichClass = int(input("Enter which class to edit: "))
-            # train.classes[whichClass][1] = input("Enter number of seats in "+ train.classes[whichClass][0][0] + " for train: ")
-            train.editTrainClass(whichClass)
-        return
+    def editTrain(self, trainId, name=None, description=None):
+        train = Train(trainId)
+        if name:
+            train.name = name
+        if description:
+            train.description = description
+        train.editTrain()
+        return True
