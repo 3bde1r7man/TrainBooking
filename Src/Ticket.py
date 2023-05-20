@@ -7,8 +7,7 @@ class Ticket():
         self.ticketId = None
         self.bookedSeats = None
         self.customerId = None
-        self.tripId = None 
-        self.age = None 
+        self.tripId = None  
         self.classId = None
         self.totalPrice = None
         self.passengers = None  
@@ -67,8 +66,6 @@ class Ticket():
         conn.close()
     
     def calculatePrice(self):
-        customer = Customer(self.customerId)
-        
         classPrice = self.classPrice()
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
