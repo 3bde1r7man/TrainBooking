@@ -12,9 +12,8 @@ class Trip():
         if(tripId != None):
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM Trip WHERE tripId = {tripId}")
+            cursor.execute(f"SELECT * FROM Trip WHERE id = {tripId}")
             data = cursor.fetchone()
-            data = data[0]
             self.src = data[0]
             self.dest = data[1]
             self.departs = data[2]
@@ -34,7 +33,7 @@ class Trip():
     def update_trip_to_database(self):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        query = "UPDATE Trip SET src=?, dest=?, departs=?, arrives=?, price=? WHERE tripId=?"  # Replace <condition> with the appropriate condition for your update
+        query = "UPDATE Trip SET src=?, dest=?, departs=?, arrives=?, price=? WHERE tripId=?"
 
         values = (self.src, self.dest, self.departs, self.arrives, self.price, self.tripId)
 
