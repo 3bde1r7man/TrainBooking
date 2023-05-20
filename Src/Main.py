@@ -1,4 +1,3 @@
-import pyodbc
 import sqlite3
 from Admin import Admin
 from Customer import Customer
@@ -27,7 +26,7 @@ class main():
     
     def signUp():
         while True:
-            signAs = input("1- To sign Up as admin\n2- To sign Up as customer")
+            signAs = int(input("1- To sign Up as admin\n2- To sign Up as customer\n"))
             if signAs == 1:
                 admin = Admin()
                 isSigned = admin.signUp()
@@ -36,7 +35,7 @@ class main():
                 break
             elif signAs == 2:
                 customer = Customer()
-                isSigned = Customer.signUp()
+                isSigned = customer.signUp()
                 break
             else:
                 print("Invalid Input")
@@ -57,3 +56,4 @@ class main():
             else:
                 print("Invalid Input")
                 continue
+main.signUp()

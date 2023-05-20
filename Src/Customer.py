@@ -1,14 +1,16 @@
 import sqlite3
 import datetime
 class Customer():
+    
     def __init__(self):
         self.name = ""
         self.DOB  = None
         self.email = ""
         self.password = ""
-        self.phone = []
+        self.phone = ""
     
     def signUp(self):
+        
         self.name = input("Enter your name: ")
         dob_input = input("Enter your Date Of Birth (D/M/Y): ")
         dob_datetime = datetime.datetime.strptime(dob_input, "%d/%m/%Y")
@@ -24,13 +26,13 @@ class Customer():
         if cursor.fetchone() == None:
             cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{self.name}", "{self.DOB}", "{self.email}", "{self.password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{self.email}" ''')
+            cursor.execute(f''' SELECT custmerId FROM Customer WHERE email = "{self.email}" ''')
             customerId = cursor.fetchone()
             if customerId == None:
                 print("Error\n")
             else:
                 print("Account created successfully\n")
-                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{customerId[0]}","{self.phone[0]}") ''')
+                cursor.execute(f'''INSERT INTO Customer_PhoneNum (custmerId, phoneNum) values ("{customerId[0]}","{self.phone}") ''')
                 conn.commit()
                 return True
         else:
@@ -67,5 +69,74 @@ class Customer():
         conn.close()
         return False
     
-
     
+    def update_name(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            self.name =input("please enter your new name: ")
+            cursor.execute(f''' UPDATE Customer SET name="{self.name}" WHERE email = "{self.email}" ''')
+            print("Name updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True
+    
+    def update_password(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            self.password =input("please enter your new password: ")
+            cursor.execute(f''' UPDATE Customer SET password ="{self.password}" WHERE email = "{self.email}" ''')
+            print("Password updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True
+    
+    def update_phoneNum(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            self.phone =str(input("please enter your new phone number : "))
+            cursor.execute(f''' SELECT custmerID FROM Customer WHERE email = "{self.email}" ''')
+            customerid = cursor.fetchone()
+            cursor.execute(f''' UPDATE Customer_phoneNum SET phoneNum ="{self.phone}" WHERE custmerId = "{customerid[0]}" ''')
+            print("phone number updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True         
+
+    def update_email(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =input("please enter your email: ")
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            print("Email not found please sign up first\n")
+            conn.close()
+            return False
+        else:
+            old_email = self.email
+            self.email =input("please enter your new email: ")
+            cursor.execute(f''' UPDATE Customer SET email ="{self.email}" WHERE email = "{old_email}" ''')
+            print("email updated successfully\n")
+            conn.commit()
+            conn.close()
+            return True
