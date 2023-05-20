@@ -12,7 +12,7 @@ class Train():
         values = (self.name, self.description, adminId)
         cursor.execute(query, values)
         conn.commit()
-        cursor.execute(f'SELECT trainId FROM Train WHERE name = "{self.name}", description = "{self.description}")')
+        cursor.execute(f'SELECT trainId FROM Train WHERE name = "{self.name}" AND description = "{self.description}")')
         trainId = cursor.fetchone()
         query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
         for Class in self.classes:
