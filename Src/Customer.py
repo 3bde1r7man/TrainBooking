@@ -140,3 +140,59 @@ class Customer():
             conn.commit()
             conn.close()
             return True
+    
+    def Book_trip(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute(f''' SELECT src,dist,departs,arrives,price FROM Trip''')
+        trip = cursor.fetchall()
+        for row in trip:
+            print(row)
+        src =input("please enter the source : ")
+        dist =input("please enter the distenation : ")
+        cursor.execute(f''' SELECT t1.tripId FROM Trip AS t1 JOIN TripCustomer AS t2 ON t1.tripId = t2.tripId WHERE t1.src = "{src}" AND t1.dist = "{dist}" ''')
+        Tid = cursor.fetchone()
+        if Tid != None:
+            print("this trip already booked")
+            return False
+        cursor.execute(f''' SELECT tripId FROM Trip where src = "{src}" and dist = "{dist}"''')
+        tripid = cursor.fetchone()
+        if tripid == None:
+            print("this trip is not exist\n")
+            return False
+        cursor.execute(f''' SELECT MAX(custmerId) FROM TripCustomer''')
+        customerid = cursor.fetchone()
+        if customerid[0] == None:
+            cursor.execute(f'''INSERT INTO TripCustomer (tripId,custmerId) values ("{tripid[0]}","{1}") ''')
+        else:
+            Cid = int(customerid[0]) + 1
+            cursor.execute(f'''INSERT INTO TripCustomer (tripId,custmerId) values ("{tripid[0]}","{Cid}") ''')
+        print("trip booked successfully\n")
+        conn.commit()
+        conn.close()
+        return True
+
+    def Cancel_trip(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute(f''' SELECT t1.tripId,t2.src,t2.dist FROM TripCustomer AS t1 JOIN Trip AS t2 ON t1.tripId = t2.tripId ''')
+        trip = cursor.fetchall()
+        for row in trip:
+            print(row)
+        tripid =input("please enter the tripid to cancel : ")
+        cursor.execute(f''' select tripId FROM TripCustomer WHERE tripId = "{tripid}" ''')
+        if cursor.fetchone() == None:
+            print("this trip is not exist\n")
+            return False
+        cursor.execute(f''' DELETE FROM TripCustomer WHERE tripId = "{tripid}" ''')
+        print("trip canceled successfully\n")
+        conn.commit()
+        conn.close()
+        return True
+
+
+
+
+
+customer = Customer()
+isSigned = customer.Cancel_trip()

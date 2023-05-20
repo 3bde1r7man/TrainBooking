@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 from Train import Train
 class Admin():
     def __init__(self):
@@ -97,3 +98,31 @@ class Admin():
             train.editTrainClass(train, whichClass)
         return
 
+    def addTrip(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        src = input("please enter the src : ")
+        dist = input("please enter the dist : ")
+        cursor.execute(f''' SELECT src,dist FROM Trip''')
+        Tid = cursor.fetchall()
+        for row in Tid:
+            if row[0]==src and row[1]==dist:
+                print("this trip already exist")
+                return False
+        departs_input = input("Enter your Date Of Departs (D/M/Y): ")
+        departs_datetime = datetime.datetime.strptime(departs_input, "%d/%m/%Y")
+        departs = departs_datetime.strftime("%Y-%m-%d")
+        arrives_time = input("Enter your Date Of Arrives (D/M/Y): ")
+        arrives_datetime = datetime.datetime.strptime(arrives_time, "%d/%m/%Y")
+        arrives = arrives_datetime.strftime("%Y-%m-%d")
+        price = float(input("please enter the price : "))
+        adminID = int(input("please enter the adminID : "))
+        trainID = int(input("please enter the trainID : "))
+        cursor.execute(f''' INSERT into Trip (src, dist, departs, arrives,price,adminId,trainId) values ("{src}", "{dist}", "{departs}", "{arrives}", "{price}", "{adminID}", "{trainID}") ''')
+        print("Trip added successfully")
+        conn.commit()
+        conn.close()
+        return True
+
+admin = Admin()
+isSigned = admin.addTrip()
