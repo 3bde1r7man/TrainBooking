@@ -1,11 +1,37 @@
 import sqlite3
 class Train():
-    def __init__(self):
-        self.name 
-        self.description 
-        self.trainId
-        self.adminId 
-        self.classes = {}
+    def __init__(self, trainId = None):
+        self.name = None
+        self.description = None
+        self.trainId = None
+        self.adminId = None
+        self.classes = None
+        if trainId is not None:
+            self.trainId = trainId
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            query = 'SELECT name, details, adminId FROM Train WHERE trainId= ?'
+            values = (trainId)
+            cursor.execute(query, values)
+            row = cursor.fetchone() 
+            self.name = row[0]
+            self.description = row[1]
+            self.adminId = row[2]
+            query = 'SELECT classId, nSeats From TrainCLass WHERE trainId = ?'
+            values = (trainId)
+            cursor.execute(query, values)
+            rows = cursor.fetchall()
+            query = 'SELECT className, price FROM Class where classId = ?'
+            for row in rows:
+                classId = row[0]
+                nSeats = row[1]
+                values = (classId)
+                cursor.execute(query, values)
+                row2 = cursor.fetchone()
+                self.classes[classId][0][0] = row2[0]
+                self.classes[classId][0][1] = row2[1]
+                self.classes[classId][1] = nSeats
+            conn.close()
 
     def addTrain(self):
         conn = sqlite3.connect('db.sqlite3')
@@ -24,9 +50,6 @@ class Train():
         conn.close()
         print("Train added successfully\n")
         return
-
-
-    
 
     def editTrain(self):
         conn = sqlite3.connect('db.sqlite3')
