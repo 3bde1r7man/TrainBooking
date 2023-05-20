@@ -3,7 +3,7 @@ import sqlite3
 import datetime
 class Trip():
     def __init__(self):
-        self.src = "chicago"
+        self.src 
         self.dest
         self.departs
         self.arrives 
@@ -19,12 +19,19 @@ class Trip():
         conn.commit()
         conn.close()
 
-    def update_trip_to_database(self, adminId, trainId):
+    def update_trip_to_database(self, tripId):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        query = "UPDATE Trip SET src=?, dist=?, departs=?, arrives=?, price=? WHERE adminId = ? AND trainID = ?"  # Replace <condition> with the appropriate condition for your update
+        cursor.execute(f"SELECT * FROM Trip WHERE id = {tripId}")
+        data = cursor.fetchall()
+        self.src = data[0]
+        self.dest = data[1]
+        self.departs = data[2]
+        self.arrives = data[3]
+        self.price = data[4]
+        query = "UPDATE Trip SET src=?, dist=?, departs=?, arrives=?, price=? WHERE tripId=?"  # Replace <condition> with the appropriate condition for your update
 
-        values = (self.src, self.dest, self.departs, self.arrives, self.price, adminId, trainId)
+        values = (self.src, self.dest, self.departs, self.arrives, self.price, tripId)
 
         cursor.execute(query, values)
         conn.commit()
