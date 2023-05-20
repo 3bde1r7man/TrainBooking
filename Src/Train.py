@@ -32,7 +32,6 @@ class Train():
                 self.classes[classId][1] = nSeats
             conn.close()
 
-
     def addTrain(self):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
@@ -50,9 +49,6 @@ class Train():
         conn.close()
         print("Train added successfully\n")
         return
-
-
-    
 
     def editTrain(self):
         conn = sqlite3.connect('db.sqlite3')
