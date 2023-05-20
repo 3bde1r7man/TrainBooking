@@ -52,16 +52,16 @@ class Customer():
 
 
     def signIn(self):
-        
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         
-        cursor.execute(f''' SELECT password FROM Customer WHERE email = "{email}" ''')
+        cursor.execute(f''' SELECT password FROM Customer WHERE email = "{self.email}" ''')
         if cursor.fetchone() == None:
             print("Error\n")
         else:
-            if cursor.fetchone()[0] == password:
-                cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
+            if cursor.fetchone()[0] == self.password:
+                print("Login successful\n")
+                cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{self.email}" ''')
                 self.name = cursor.fetchone()[0]
                 self.DOB = cursor.fetchone()[1]
                 self.email = cursor.fetchone()[2]
