@@ -1,20 +1,31 @@
 import sqlite3
 import datetime
 class Customer():
-    def __init__(self):
-        self.name = ""
+    def __init__(self, customerId= None):
+        self.customerId = customerId
+        self.name = None
         self.DOB  = None
-        self.email = ""
-        self.password = ""
-        self.phone = []
+        self.email = None
+        self.password = None
+        self.phone = None
+        if customerId != None:
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT name, password, DOB, email FROM Customer Where customerId = {customerId}")
+            data = cursor.fetchone()
+            self.name = data[0]
+            self.password = data[1]
+            self.DOB = data[2]
+            self.email = data[3]
+
+            cursor.execute(f"SELECT phoneNum FROM Customer_phoneNum Where customerId = {customerId}")
+            data = cursor.fetchall()
+            self.phone = []
+            for row in data:
+                self.phone.append(row[0])
+
     
     def signUp(self):
-        self.name = input("Enter your name: ")
-        dob_input = input("Enter your Date Of Birth (Y-M-D): ")
-        self.DOB = datetime.datetime.strptime(dob_input, "%Y-%m-%d")
-        self.phone = input("Enter your phone number: ")
-        self.email = input("Enter your email address: ")
-        self.password = input("Enter your password: ")
 
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
@@ -41,8 +52,6 @@ class Customer():
 
 
     def signIn(self):
-        email = input("Enter your email address: ")
-        password = input("Enter your password: ")
         
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
@@ -52,7 +61,6 @@ class Customer():
             print("Error\n")
         else:
             if cursor.fetchone()[0] == password:
-                print("Login successful\n")
                 cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
                 self.name = cursor.fetchone()[0]
                 self.DOB = cursor.fetchone()[1]
@@ -70,3 +78,5 @@ class Customer():
         today = datetime.date.today()
         age = today.year - self.DOB.year - ((today.month, today.day) < (self.DOB.month, self.DOB.day))
         return age
+    
+    
