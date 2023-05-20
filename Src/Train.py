@@ -1,12 +1,13 @@
 import sqlite3
 class Train():
     def __init__(self, trainId = None):
-        self.name 
-        self.description 
-        self.trainId
-        self.adminId 
-        self.classes = {}
+        self.name = None
+        self.description = None
+        self.trainId = None
+        self.adminId = None
+        self.classes = None
         if trainId is not None:
+            self.trainId = trainId
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
             query = 'SELECT name, details, adminId FROM Train WHERE trainId= ?'

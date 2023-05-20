@@ -3,11 +3,11 @@ import sqlite3
 import datetime
 class Trip():
     def __init__(self, tripId = None):
-        self.src 
-        self.dest
-        self.departs
-        self.arrives 
-        self.price
+        self.src = None
+        self.dest = None
+        self.departs = None
+        self.arrives = None
+        self.price = None
         self.tripId = tripId
         if(tripId != None):
             conn = sqlite3.connect('db.sqlite3')

@@ -89,3 +89,48 @@ class Admin:
             train.description = description
         train.editTrain()
         return True
+    
+    def add_trip(self, src, dist, departs, arrives, price):
+        trip = Trip()
+        trip.src = src
+        trip.dist = dist
+        trip.departs = departs
+        trip.arrives = arrives
+        trip.price = price
+        trip.add_trip_to_database()
+
+    def update_trip(self, trip_id, src, dist, departs, arrives, price):
+        trip = Trip()
+        trip.src = src
+        trip.dist = dist
+        trip.departs = departs
+        trip.arrives = arrives
+        trip.price = price
+        trip.update_trip_to_database(trip_id)
+
+    def update_name(self, name):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('''UPDATE Admin SET name = ? WHERE adminId = ?''', (name, self.adminId))
+        conn.commit()
+        conn.close()
+
+    def update_email(self, email):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('''UPDATE Admin SET email = ? WHERE adminId = ?''', (email, self.adminId))
+        conn.commit()
+        conn.close()
+
+    def update_password(self, old_password, new_password):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('''SELECT password FROM Admin WHERE adminId = ?''', (self.adminId,))
+        stored_password = cursor.fetchone()
+        if stored_password is None or stored_password[0] != old_password:
+            conn.close()
+            raise ValueError("Invalid old password.")
+
+        cursor.execute('''UPDATE Admin SET password = ? WHERE adminId = ?''', (new_password, self.adminId))
+        conn.commit()
+        conn.close()
