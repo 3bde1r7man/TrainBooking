@@ -1,245 +1,166 @@
 import tkinter as tk
 from tkinter import messagebox
-import tkinter as tk
-from tkinter import messagebox
-import datetime
 import sqlite3
+from tkinter import simpledialog
+from Train import Train 
+from Class import Class
 
 # Create the main Tkinter window
-window = tk.Tk()
-window.title("Train Booking System")
 
-# Database connection
-conn = sqlite3.connect('db.sqlite3')
-cursor = conn.cursor()
-
-# GUI Elements
-lbl_customer = tk.Label(window, text="Customer")
-lbl_customer.grid(row=0, column=0, padx=5, pady=5)
-
-lbl_ticket = tk.Label(window, text="Ticket")
-lbl_ticket.grid(row=0, column=1, padx=5, pady=5)
-
-lbl_train = tk.Label(window, text="Train")
-lbl_train.grid(row=0, column=2, padx=5, pady=5)
-
-lbl_trip = tk.Label(window, text="Trip")
-lbl_trip.grid(row=0, column=3, padx=5, pady=5)
-
-# Customer GUI
-lbl_customer_name = tk.Label(window, text="Name:")
-lbl_customer_name.grid(row=1, column=0, padx=5, pady=5)
-
-entry_customer_name = tk.Entry(window)
-entry_customer_name.grid(row=1, column=1, padx=5, pady=5)
-
-lbl_customer_dob = tk.Label(window, text="DOB:")
-lbl_customer_dob.grid(row=2, column=0, padx=5, pady=5)
-
-entry_customer_dob = tk.Entry(window)
-entry_customer_dob.grid(row=2, column=1, padx=5, pady=5)
-
-lbl_customer_email = tk.Label(window, text="Email:")
-lbl_customer_email.grid(row=3, column=0, padx=5, pady=5)
-
-entry_customer_email = tk.Entry(window)
-entry_customer_email.grid(row=3, column=1, padx=5, pady=5)
-
-lbl_customer_password = tk.Label(window, text="Password:")
-lbl_customer_password.grid(row=4, column=0, padx=5, pady=5)
-
-entry_customer_password = tk.Entry(window, show="*")
-entry_customer_password.grid(row=4, column=1, padx=5, pady=5)
-
-lbl_customer_phone = tk.Label(window, text="Phone:")
-lbl_customer_phone.grid(row=5, column=0, padx=5, pady=5)
-
-entry_customer_phone = tk.Entry(window)
-entry_customer_phone.grid(row=5, column=1, padx=5, pady=5)
-
-btn_customer_signup = tk.Button(window, text="Sign Up", command=lambda: signup_customer())
-btn_customer_signup.grid(row=6, column=0, padx=5, pady=5)
-
-btn_customer_signin = tk.Button(window, text="Sign In", command=lambda: signin_customer())
-btn_customer_signin.grid(row=6, column=1, padx=5, pady=5)
-
-# Ticket GUI
-lbl_ticket_customer_id = tk.Label(window, text="Customer ID:")
-lbl_ticket_customer_id.grid(row=1, column=2, padx=5, pady=5)
-
-entry_ticket_customer_id = tk.Entry(window)
-entry_ticket_customer_id.grid(row=1, column=3, padx=5, pady=5)
-
-lbl_ticket_trip_id = tk.Label(window, text="Trip ID:")
-lbl_ticket_trip_id.grid(row=2, column=2, padx=5, pady=5)
-
-entry_ticket_trip_id = tk.Entry(window)
-entry_ticket_trip_id.grid(row=2, column=3, padx=5, pady=5)
-
-lbl_ticket_class_id = tk.Label(window, text="Class ID:")
-lbl_ticket_class_id.grid(row=3, column=2, padx=5, pady=5)
-
-entry_ticket_class_id = tk.Entry(window)
-entry_ticket_class_id.grid(row=3, column=3, padx=5, pady=5)
-
-lbl_ticket_passenger_name = tk.Label(window, text="Passenger Name:")
-lbl_ticket_passenger_name.grid(row=4, column=2, padx=5, pady=5)
-
-entry_ticket_passenger_name = tk.Entry(window)
-entry_ticket_passenger_name.grid(row=4, column=3, padx=5, pady=5)
-
-lbl_ticket_passenger_age = tk.Label(window, text="Passenger Age:")
-lbl_ticket_passenger_age.grid(row=5, column=2, padx=5, pady=5)
-
-entry_ticket_passenger_age = tk.Entry(window)
-entry_ticket_passenger_age.grid(row=5, column=3, padx=5, pady=5)
-
-btn_ticket_add = tk.Button(window, text="Add Ticket", command=lambda: add_ticket())
-btn_ticket_add.grid(row=6, column=2, padx=5, pady=5)
-
-btn_ticket_delete = tk.Button(window, text="Delete Ticket", command=lambda: delete_ticket())
-btn_ticket_delete.grid(row=6, column=3, padx=5, pady=5)
-
-# Train GUI
-lbl_train_name = tk.Label(window, text="Train Name:")
-lbl_train_name.grid(row=1, column=4, padx=5, pady=5)
-
-entry_train_name = tk.Entry(window)
-entry_train_name.grid(row=1, column=5, padx=5, pady=5)
-
-lbl_train_description = tk.Label(window, text="Description:")
-lbl_train_description.grid(row=2, column=4, padx=5, pady=5)
-
-entry_train_description = tk.Entry(window)
-entry_train_description.grid(row=2, column=5, padx=5, pady=5)
-
-lbl_train_class_id = tk.Label(window, text="Class ID:")
-lbl_train_class_id.grid(row=3, column=4, padx=5, pady=5)
-
-entry_train_class_id = tk.Entry(window)
-entry_train_class_id.grid(row=3, column=5, padx=5, pady=5)
-
-lbl_train_n_seats = tk.Label(window, text="Number of Seats:")
-lbl_train_n_seats.grid(row=4, column=4, padx=5, pady=5)
-
-entry_train_n_seats = tk.Entry(window)
-entry_train_n_seats.grid(row=4, column=5, padx=5, pady=5)
-
-btn_train_add = tk.Button(window, text="Add Train", command=lambda: add_train())
-btn_train_add.grid(row=5, column=4, padx=5, pady=5)
-
-btn_train_edit = tk.Button(window, text="Edit Train", command=lambda: edit_train())
-btn_train_edit.grid(row=5, column=5, padx=5, pady=5)
-
-btn_train_class_edit = tk.Button(window, text="Edit Train Class", command=lambda: edit_train_class())
-btn_train_class_edit.grid(row=6, column=4, padx=5, pady=5)
-
-# Trip GUI
-lbl_trip_src = tk.Label(window, text="Source:")
-lbl_trip_src.grid(row=1, column=6, padx=5, pady=5)
-
-entry_trip_src = tk.Entry(window)
-entry_trip_src.grid(row=1, column=7, padx=5, pady=5)
-
-lbl_trip_dest = tk.Label(window, text="Destination:")
-lbl_trip_dest.grid(row=2, column=6, padx=5, pady=5)
-
-entry_trip_dest = tk.Entry(window)
-entry_trip_dest.grid(row=2, column=7, padx=5, pady=5)
-
-lbl_trip_departs = tk.Label(window, text="Departs:")
-lbl_trip_departs.grid(row=3, column=6, padx=5, pady=5)
-
-entry_trip_departs = tk.Entry(window)
-entry_trip_departs.grid(row=3, column=7, padx=5, pady=5)
-
-lbl_trip_arrives = tk.Label(window, text="Arrives:")
-lbl_trip_arrives.grid(row=4, column=6, padx=5, pady=5)
-
-entry_trip_arrives = tk.Entry(window)
-entry_trip_arrives.grid(row=4, column=7, padx=5, pady=5)
-
-lbl_trip_price = tk.Label(window, text="Price:")
-lbl_trip_price.grid(row=5, column=6, padx=5, pady=5)
-
-entry_trip_price = tk.Entry(window)
-entry_trip_price.grid(row=5, column=7, padx=5, pady=5)
-
-btn_trip_add = tk.Button(window, text="Add Trip", command=lambda: add_trip())
-btn_trip_add.grid(row=6, column=6, padx=5, pady=5)
-
-btn_trip_update = tk.Button(window, text="Update Trip", command=lambda: update_trip())
-btn_trip_update.grid(row=6, column=7, padx=5, pady=5)
-
-window.mainloop()
-
-
-
-
-class GUI:
+class TrainManagerGUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Train Booking System")
-
-        self.conn = sqlite3.connect('db.sqlite3')
-        self.cursor = self.conn.cursor()
-
-        # Initialize the GUI elements
-        self.init_elements()
-
-    def init_elements(self):
-        # Add train button
-        add_train_btn = tk.Button(self.root, text="Add Train", command=self.add_train)
-        add_train_btn.pack()
-
-        # Update train button
-        update_train_btn = tk.Button(self.root, text="Update Train", command=self.update_train)
-        update_train_btn.pack()
-
-        # Add trip button
-        add_trip_btn = tk.Button(self.root, text="Add Trip", command=self.add_trip)
-        add_trip_btn.pack()
-
-        # Update trip button
-        update_trip_btn = tk.Button(self.root, text="Update Trip", command=self.update_trip)
-        update_trip_btn.pack()
-
-        # Show available seats button
-        show_seats_btn = tk.Button(self.root, text="Show Available Seats", command=self.show_available_seats)
-        show_seats_btn.pack()
-
-        # Book trip button
-        book_trip_btn = tk.Button(self.root, text="Book Trip", command=self.book_trip)
-        book_trip_btn.pack()
+        self.root.title("Train Manager")
+        self.root.geometry("450x450")
+        self.name_label = tk.Label(self.root, text="Name:")
+        self.name_label.pack()
+        self.name_entry = tk.Entry(self.root)
+        self.name_entry.pack()
+        
+        self.details_label = tk.Label(self.root, text="Details:")
+        self.details_label.pack()
+        self.details_entry = tk.Entry(self.root)
+        self.details_entry.pack()
+        
+        self.class_label = tk.Label(self.root, text="Classes:")
+        self.class_label.pack()
+        self.class_listbox = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
+        self.class_listbox.pack()
+        
+        self.seats_entries = []
+        
+        self.add_train_button = tk.Button(self.root, text="Add Train", command=self.add_train)
+        self.add_train_button.pack()
+        
+        self.edit_train_button = tk.Button(self.root, text="Edit Train", command=self.edit_train)
+        self.edit_train_button.pack()
+        
+        self.populate_class_list()
+        
+    def populate_class_list(self):
+        classes = Class()
+        classes = classes.getClasses()
+        for class_data in classes:
+            self.class_listbox.insert(tk.END, f"{class_data[1]} (${class_data[2]})")
 
     def add_train(self):
-        # Implement the logic for adding a train
-        pass
+        name = self.name_entry.get()
+        details = self.details_entry.get()
+        selected_indices = self.class_listbox.curselection()
+        
+        if not name or not details or not selected_indices:
+            messagebox.showerror("Error", "Please enter all required information")
+            return
+        classes = Class()
+        classes = classes.getClasses()
+        selected_classes = [classes[i] for i in selected_indices]
+        
+        train = Train()
+        train.name = name
+        train.description = details
+        
+        for class_data in selected_classes:
+            class_id = class_data[0]
+            class_name = class_data[1]
+            class_price = class_data[2]
+            
+            n_seats = self.enter_seats(class_name)
+            
+            train.classes[class_id] = [class_name, class_price, n_seats]
+        
+        train.addTrain()
+        
+        messagebox.showinfo("Success", "Train added successfully")
+        
+        self.name_entry.delete(0, tk.END)
+        self.details_entry.delete(0, tk.END)
+        self.class_listbox.selection_clear(0, tk.END)
+        
+    def enter_seats(self, class_name):
+        seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
+        return seats
+        
+    def edit_train(self):
+        selected_train_index = self.select_train()
+        if selected_train_index is None:
+            return
 
-    def update_train(self):
-        # Implement the logic for updating a train
-        pass
+        selected_train = Train(selected_train_index)
 
-    def add_trip(self):
-        # Implement the logic for adding a trip
-        pass
+        edit_choice = self.choose_edit_option()
 
-    def update_trip(self):
-        # Implement the logic for updating a trip
-        pass
+        if edit_choice == 1:
+            self.edit_train_details(selected_train)
+        elif edit_choice == 2:
+            self.edit_train_classes(selected_train)
 
-    def show_available_seats(self):
-        # Implement the logic for showing available seats
-        pass
+    def select_train(self):
+        # Retrieve the list of available trains from the database and display them in a selection dialog
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('SELECT trainId, name FROM Train')
+        rows = cursor.fetchall()
+        conn.close()
 
-    def book_trip(self):
-        # Implement the logic for booking a trip
-        pass
+        train_names = [row[1] for row in rows]
+        selected_index = tk.simpledialog.askinteger("Select Train", "Select a train:", minvalue=1, maxvalue=len(train_names))
+        if selected_index is None:
+            return None
 
+        return rows[selected_index - 1][0]
+
+    def choose_edit_option(self):
+        # Display a dialog to choose between editing train details or train classes
+        return tk.messagebox.askquestion("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
+
+    def edit_train_details(self, train):
+        # Prompt the user to enter new train details
+        new_name = tk.simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=train.name)
+        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=train.details)
+
+        if new_name and new_details:
+            train.name = new_name
+            train.description = new_details
+            train.editTrain()
+            tk.messagebox.showinfo("Success", "Train details edited successfully")
+        else:
+            tk.messagebox.showerror("Error", "Please enter valid train details")
+
+    def edit_train_classes(self, train):
+        selected_class_index = self.select_train_class(train)
+        if selected_class_index is None:
+            return
+
+        selected_class_id = list(train.classes.keys())[selected_class_index]
+
+        new_seats = self.enter_seats(train.classes[selected_class_id][0])
+        if new_seats is None:
+            return
+
+        train.classes[selected_class_id][2] = new_seats
+        train.editTrainClass(selected_class_id)
+        tk.messagebox.showinfo("Success", "Train class edited successfully")
+
+    def select_train_class(self, train):
+        # Display the train's classes and prompt the user to select a class to edit
+        class_names = [class_data[0] for class_data in train.classes.values()]
+        selected_index = tk.simpledialog.askinteger("Select Train Class", "Select a class to edit:", minvalue=1, maxvalue=len(class_names))
+        if selected_index is None:
+            return None
+
+        return selected_index - 1
+
+    def enter_seats(self, class_name):
+        return tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
+        
     def run(self):
         self.root.mainloop()
 
-    def __del__(self):
-        self.conn.close()
+
+
+gui = TrainManagerGUI()
+gui.run()
+
+
 
 

@@ -1,66 +1,71 @@
 import sqlite3
-from tkinter import messagebox
-
-conn = sqlite3.connect('db.sqlite3')
-cursor = conn.cursor()
-
-
-class Train:
-    def __init__(self, trainId=None):
+class Train():
+    def __init__(self, trainId = None):
         self.name = None
         self.description = None
         self.trainId = None
         self.adminId = None
-        self.classes = None
+        self.classes = {} 
         if trainId is not None:
             self.trainId = trainId
-            cursor.execute(f'SELECT name, details, adminId FROM Train WHERE trainId = {trainId}')
-            row = cursor.fetchone()
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            query = 'SELECT name, details, adminId FROM Train WHERE trainId= ?'
+            values = (trainId)
+            cursor.execute(query, values)
+            row = cursor.fetchone() 
             self.name = row[0]
             self.description = row[1]
             self.adminId = row[2]
-            cursor.execute(f'SELECT classId, nSeats FROM TrainCLass WHERE trainId = {trainId}')
+            query = 'SELECT classId, nSeats From TrainCLass WHERE trainId = ?'
+            values = (trainId)
+            cursor.execute(query, values)
             rows = cursor.fetchall()
+            query = 'SELECT className, price FROM Class where classId = ?'
             self.classes = {}
             for row in rows:
                 classId = row[0]
                 nSeats = row[1]
-                cursor.execute(f'SELECT className, price FROM Class WHERE classId = {classId}')
+                values = (classId)
+                cursor.execute(query, values)
                 row2 = cursor.fetchone()
-                className = row2[0]
-                price = row2[1]
-                self.classes[classId] = [className, price, nSeats]
+                self.classes[classId][0] = row2[0]
+                self.classes[classId][1] = row2[1]
+                self.classes[classId][2] = nSeats
+            conn.close()
 
     def addTrain(self):
-        cursor.execute(
-            f'INSERT INTO Train (name, details, adminId) VALUES (?, ?, ?)',
-            (self.name, self.description, self.adminId))
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        query = 'INSERT INTO Train (name, details, adminId) VALUES (?, ?, ?)'
+        values = (self.name, self.description, self.adminId)
+        cursor.execute(query, values)
         conn.commit()
-
-        cursor.execute(f'SELECT MAX(trainId) FROM Train WHERE adminId = {self.adminId}')
+        cursor.execute(f'SELECT max(trainId) FROM Train WHERE name = "{self.name}" AND details = "{self.description}")')
         self.trainId = cursor.fetchone()[0]
-
-        for classId, classData in self.classes.items():
-            cursor.execute(
-                f'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)',
-                (self.trainId, classId, classData[2]))
+        query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
+        for Class in self.classes:
+            values = (self.trainId, Class, self.classes[Class][1])
+            cursor.execute(query, values)
             conn.commit()
-
-        messagebox.showinfo("Success", "Train added successfully")
+        conn.close()
+        return
 
     def editTrain(self):
-        cursor.execute(
-            f'UPDATE Train SET name = ?, details = ? WHERE trainId = ?',
-            (self.name, self.description, self.trainId))
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        query = 'UPDATE Train SET name = ?, details = ? WHERE trainId = ?'
+        values = (self.name, self.description, self.trainId)
+        cursor.execute(query, values)
         conn.commit()
-
-        messagebox.showinfo("Success", "Train edited successfully")
+        conn.close()
 
     def editTrainClass(self, whichClass):
-        classData = self.classes[whichClass]
-        cursor.execute(
-            f'UPDATE TrainClass SET nSeats = ? WHERE trainId = ? AND classId = ?',
-            (classData[2], self.trainId, whichClass))
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        query = 'UPDATE TrainClass SET nSeats = ? WHERE trainId = ? AND classId = ?'
+        values = (self.classes[whichClass][1], self.trainId, whichClass)
+        cursor.execute(query , values)
         conn.commit()
+        conn.close()
 
-        messagebox.showinfo("Success", "Train class edited successfully")
