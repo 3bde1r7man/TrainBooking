@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Admin import Admin
+from tripView import AddTripView, UpdateTripView
 
 class MainApp:
     def __init__(self):
@@ -60,15 +61,15 @@ class SignInWindow:
             success = admin.sign_in(email, password)
             if success:
                 messagebox.showinfo("Success", "Sign in successful!")
-                self.show_main_menu()
+                self.show_main_menu(admin.adminId)
             else:
                 messagebox.showerror("Error", "Invalid email or password.")
         except ValueError as e:
             messagebox.showerror("Error", str(e))
         self.sign_in_window.destroy()
 
-    def show_main_menu(self):
-        main_menu_window = MainMenuWindow(self.parent, self.main_app)
+    def show_main_menu(self, adminId):
+        main_menu_window = MainMenuWindow(self.parent, self.main_app, adminId)
 
 
 class SignUpWindow:
@@ -118,7 +119,7 @@ class SignUpWindow:
         self.sign_up_window.destroy()
 
 class MainMenuWindow:
-    def __init__(self, parent, main_app):
+    def __init__(self, parent, main_app, adminId):
         self.parent = parent
         self.main_app = main_app
 
@@ -134,10 +135,10 @@ class MainMenuWindow:
         edit_train_button = ttk.Button(self.container, text="Edit Train")
         edit_train_button.grid(row=1, column=0, padx=10, pady=5)
 
-        add_trip_button = ttk.Button(self.container, text="Add Trip")
+        add_trip_button = ttk.Button(self.container, text="Add Trip", command= lambda: AddTripView(adminId))
         add_trip_button.grid(row=0, column=1, padx=10, pady=5)
 
-        edit_trip_button = ttk.Button(self.container, text="Edit Trip")
+        edit_trip_button = ttk.Button(self.container, text="Edit Trip", command= lambda: UpdateTripView(adminId))
         edit_trip_button.grid(row=1, column=1, padx=10, pady=5)
 
         edit_info_button = ttk.Button(self.container, text="Edit My Info")

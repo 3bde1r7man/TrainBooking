@@ -1,4 +1,4 @@
 from GUI import GUI
+from admintk import MainApp
 
-gui = GUI()
-gui.run()
+main_app = MainApp()
