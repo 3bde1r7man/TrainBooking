@@ -1,4 +1,5 @@
 import sqlite3
+import time
 class Train():
     def __init__(self, trainId = None):
         self.name = None
@@ -10,28 +11,21 @@ class Train():
             self.trainId = trainId
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
-            query = 'SELECT name, details, adminId FROM Train WHERE trainId= ?'
-            values = (trainId)
-            cursor.execute(query, values)
+            cursor.execute('SELECT name, details, adminId FROM train WHERE trainId =?', (trainId,))
             row = cursor.fetchone() 
             self.name = row[0]
             self.description = row[1]
             self.adminId = row[2]
-            query = 'SELECT classId, nSeats From TrainCLass WHERE trainId = ?'
-            values = (trainId)
-            cursor.execute(query, values)
+            cursor.execute('SELECT classId, nSeats From TrainCLass WHERE trainId = ?', (trainId,))
             rows = cursor.fetchall()
-            query = 'SELECT className, price FROM Class where classId = ?'
-            self.classes = {}
+            
             for row in rows:
                 classId = row[0]
                 nSeats = row[1]
-                values = (classId)
-                cursor.execute(query, values)
+                cursor.execute('SELECT className, price FROM Class where classId = ?', (classId,))
                 row2 = cursor.fetchone()
-                self.classes[classId][0] = row2[0]
-                self.classes[classId][1] = row2[1]
-                self.classes[classId][2] = nSeats
+                classatt = (row2[0], row2[1], nSeats)
+                self.classes[classId] = classatt
             conn.close()
 
     def addTrain(self):
@@ -41,11 +35,11 @@ class Train():
         values = (self.name, self.description, self.adminId)
         cursor.execute(query, values)
         conn.commit()
-        cursor.execute(f'SELECT max(trainId) FROM Train WHERE name = "{self.name}" AND details = "{self.description}")')
+        cursor.execute(f'SELECT max(trainId) FROM Train WHERE name = "{self.name}" AND details = "{self.description}"')
         self.trainId = cursor.fetchone()[0]
         query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
         for Class in self.classes:
-            values = (self.trainId, Class, self.classes[Class][1])
+            values = (self.trainId, Class, self.classes[Class][2])
             cursor.execute(query, values)
             conn.commit()
         conn.close()

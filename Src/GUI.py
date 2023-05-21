@@ -1,14 +1,14 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import sqlite3
-from tkinter import simpledialog
 from Train import Train 
 from Class import Class
 
 # Create the main Tkinter window
 
 class TrainManagerGUI:
-    def __init__(self):
+    def __init__(self, adminId = None):
+        self.adminId = adminId
         self.root = tk.Tk()
         self.root.title("Train Manager")
         self.root.geometry("450x450")
@@ -58,6 +58,7 @@ class TrainManagerGUI:
         train = Train()
         train.name = name
         train.description = details
+        train.adminId = self.adminId
         
         for class_data in selected_classes:
             class_id = class_data[0]
@@ -95,19 +96,19 @@ class TrainManagerGUI:
             self.edit_train_classes(selected_train)
 
     def select_train(self):
-        # Retrieve the list of available trains from the database and display them in a selection dialog
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         cursor.execute('SELECT trainId, name FROM Train')
         rows = cursor.fetchall()
         conn.close()
 
-        train_names = [row[1] for row in rows]
-        selected_index = tk.simpledialog.askinteger("Select Train", "Select a train:", minvalue=1, maxvalue=len(train_names))
+        train_names = [f"{row[0]} - {row[1]}" for row in rows]
+        prompt = "\n".join(train_names)
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
         if selected_index is None:
             return None
 
-        return rows[selected_index - 1][0]
+        return int(rows[selected_index - 1][0])
 
     def choose_edit_option(self):
         # Display a dialog to choose between editing train details or train classes
