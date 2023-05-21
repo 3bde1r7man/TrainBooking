@@ -66,7 +66,6 @@ class Ticket():
         conn.close()
     
     def calculatePrice(self):
-        customer = Customer()
         classPrice = self.classPrice()
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
