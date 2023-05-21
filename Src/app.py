@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from Admin import Admin
-
+from Customer import Customer
 app = Flask(__name__)
-admin = Admin()
 
 # Home Page
 @app.route('/')
@@ -13,12 +12,35 @@ def home():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        admin.signUp(name, email, password)
-        return redirect(url_for('signin'))
-    return render_template('signup.html')
+        if 'adminName' in request.form:
+            name = request.form['adminName']
+            email = request.form['adminEmail']
+            password = request.form['adminPassword']
+            confirm_password = request.form['adminConfirmPassword']
+            if password == confirm_password:
+                admin = Admin()
+                try:
+                    admin.sign_up(name, email, password)
+                except Exception as e:
+                    return redirect(url_for('error', message=e))
+                else:
+                    return redirect(url_for('signin'))
+        else:
+            name = request.form['customerName']
+            dob = request.form['customerDOB']
+            email = request.form['customerEmail']
+            phone = request.form['customerPhone']
+            password = request.form['customerPassword']
+            confirm_password = request.form['customerConfirmPassword']
+            if password == confirm_password:
+                customer = Customer()
+                try:
+                    customer.signUp(name,dob,email,password,phone)
+                except Exception as e:
+                    return redirect(url_for('error', message=e))
+                else:
+                    return redirect(url_for('signin'))
+    return render_template('../assets/html/signup.html')
 
 # Sign In Page
 @app.route('/signin', methods=['GET', 'POST'])
@@ -81,6 +103,18 @@ def booking_cancellation():
     # Implement logic to retrieve booking details and pass them to the template
     booking_details = admin.get_booking_details()
     return render_template('bookingcancellation.html', booking_details=booking_details)
+
+# Error Page
+@app.route('/error')
+def error():
+    error_message = request.args.get('message')
+    return render_template('error.html', error_message=error_message)
+
+# Success Page
+@app.route('/success')
+def error():
+    success_message = request.args.get('message')
+    return render_template('error.html', success_message=success_message)
 
 if __name__ == '__main__':
     app.run(debug=True)

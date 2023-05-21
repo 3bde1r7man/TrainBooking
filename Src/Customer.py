@@ -25,22 +25,22 @@ class Customer():
                 self.phone.append(row[0])
 
     
-    def signUp(self):
+    def signUp(self,name,dob,email,password,phone):
 
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
 
-        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{email}" ''')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{self.name}", "{self.DOB}", "{self.email}", "{self.password}") ''')
+            cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{name}", "{dob}", "{email}", "{password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{self.email}" ''')
+            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{email}" ''')
             customerId = cursor.fetchone()
             if customerId == None:
                 print("Error\n")
             else:
                 print("Account created successfully\n")
-                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{customerId[0]}","{self.phone[0]}") ''')
+                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{customerId[0]}","{phone}") ''')
                 conn.commit()
                 return True
         else:
