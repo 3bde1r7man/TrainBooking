@@ -1,6 +1,18 @@
 import tkinter as tk
 import sqlite3
 from tkinter import messagebox
+import tkinter as tk
+from tkinter import messagebox
+import datetime
+import sqlite3
+
+# Create the main Tkinter window
+window = tk.Tk()
+window.title("Train Booking System")
+
+# Database connection
+conn = sqlite3.connect('db.sqlite3')
+cursor = conn.cursor()
 
 class GUI:
     def __init__(self):
@@ -67,6 +79,167 @@ class GUI:
 
     def __del__(self):
         self.conn.close()
+
+# GUI Elements
+lbl_customer = tk.Label(window, text="Customer")
+lbl_customer.grid(row=0, column=0, padx=5, pady=5)
+
+lbl_ticket = tk.Label(window, text="Ticket")
+lbl_ticket.grid(row=0, column=1, padx=5, pady=5)
+
+lbl_train = tk.Label(window, text="Train")
+lbl_train.grid(row=0, column=2, padx=5, pady=5)
+
+lbl_trip = tk.Label(window, text="Trip")
+lbl_trip.grid(row=0, column=3, padx=5, pady=5)
+
+# Customer GUI
+lbl_customer_name = tk.Label(window, text="Name:")
+lbl_customer_name.grid(row=1, column=0, padx=5, pady=5)
+
+entry_customer_name = tk.Entry(window)
+entry_customer_name.grid(row=1, column=1, padx=5, pady=5)
+
+lbl_customer_dob = tk.Label(window, text="DOB:")
+lbl_customer_dob.grid(row=2, column=0, padx=5, pady=5)
+
+entry_customer_dob = tk.Entry(window)
+entry_customer_dob.grid(row=2, column=1, padx=5, pady=5)
+
+lbl_customer_email = tk.Label(window, text="Email:")
+lbl_customer_email.grid(row=3, column=0, padx=5, pady=5)
+
+entry_customer_email = tk.Entry(window)
+entry_customer_email.grid(row=3, column=1, padx=5, pady=5)
+
+lbl_customer_password = tk.Label(window, text="Password:")
+lbl_customer_password.grid(row=4, column=0, padx=5, pady=5)
+
+entry_customer_password = tk.Entry(window, show="*")
+entry_customer_password.grid(row=4, column=1, padx=5, pady=5)
+
+lbl_customer_phone = tk.Label(window, text="Phone:")
+lbl_customer_phone.grid(row=5, column=0, padx=5, pady=5)
+
+entry_customer_phone = tk.Entry(window)
+entry_customer_phone.grid(row=5, column=1, padx=5, pady=5)
+
+btn_customer_signup = tk.Button(window, text="Sign Up", command=lambda: signup_customer())
+btn_customer_signup.grid(row=6, column=0, padx=5, pady=5)
+
+btn_customer_signin = tk.Button(window, text="Sign In", command=lambda: signin_customer())
+btn_customer_signin.grid(row=6, column=1, padx=5, pady=5)
+
+# Ticket GUI
+lbl_ticket_customer_id = tk.Label(window, text="Customer ID:")
+lbl_ticket_customer_id.grid(row=1, column=2, padx=5, pady=5)
+
+entry_ticket_customer_id = tk.Entry(window)
+entry_ticket_customer_id.grid(row=1, column=3, padx=5, pady=5)
+
+lbl_ticket_trip_id = tk.Label(window, text="Trip ID:")
+lbl_ticket_trip_id.grid(row=2, column=2, padx=5, pady=5)
+
+entry_ticket_trip_id = tk.Entry(window)
+entry_ticket_trip_id.grid(row=2, column=3, padx=5, pady=5)
+
+lbl_ticket_class_id = tk.Label(window, text="Class ID:")
+lbl_ticket_class_id.grid(row=3, column=2, padx=5, pady=5)
+
+entry_ticket_class_id = tk.Entry(window)
+entry_ticket_class_id.grid(row=3, column=3, padx=5, pady=5)
+
+lbl_ticket_passenger_name = tk.Label(window, text="Passenger Name:")
+lbl_ticket_passenger_name.grid(row=4, column=2, padx=5, pady=5)
+
+entry_ticket_passenger_name = tk.Entry(window)
+entry_ticket_passenger_name.grid(row=4, column=3, padx=5, pady=5)
+
+lbl_ticket_passenger_age = tk.Label(window, text="Passenger Age:")
+lbl_ticket_passenger_age.grid(row=5, column=2, padx=5, pady=5)
+
+entry_ticket_passenger_age = tk.Entry(window)
+entry_ticket_passenger_age.grid(row=5, column=3, padx=5, pady=5)
+
+btn_ticket_add = tk.Button(window, text="Add Ticket", command=lambda: add_ticket())
+btn_ticket_add.grid(row=6, column=2, padx=5, pady=5)
+
+btn_ticket_delete = tk.Button(window, text="Delete Ticket", command=lambda: delete_ticket())
+btn_ticket_delete.grid(row=6, column=3, padx=5, pady=5)
+
+# Train GUI
+lbl_train_name = tk.Label(window, text="Train Name:")
+lbl_train_name.grid(row=1, column=4, padx=5, pady=5)
+
+entry_train_name = tk.Entry(window)
+entry_train_name.grid(row=1, column=5, padx=5, pady=5)
+
+lbl_train_description = tk.Label(window, text="Description:")
+lbl_train_description.grid(row=2, column=4, padx=5, pady=5)
+
+entry_train_description = tk.Entry(window)
+entry_train_description.grid(row=2, column=5, padx=5, pady=5)
+
+lbl_train_class_id = tk.Label(window, text="Class ID:")
+lbl_train_class_id.grid(row=3, column=4, padx=5, pady=5)
+
+entry_train_class_id = tk.Entry(window)
+entry_train_class_id.grid(row=3, column=5, padx=5, pady=5)
+
+lbl_train_n_seats = tk.Label(window, text="Number of Seats:")
+lbl_train_n_seats.grid(row=4, column=4, padx=5, pady=5)
+
+entry_train_n_seats = tk.Entry(window)
+entry_train_n_seats.grid(row=4, column=5, padx=5, pady=5)
+
+btn_train_add = tk.Button(window, text="Add Train", command=lambda: add_train())
+btn_train_add.grid(row=5, column=4, padx=5, pady=5)
+
+btn_train_edit = tk.Button(window, text="Edit Train", command=lambda: edit_train())
+btn_train_edit.grid(row=5, column=5, padx=5, pady=5)
+
+btn_train_class_edit = tk.Button(window, text="Edit Train Class", command=lambda: edit_train_class())
+btn_train_class_edit.grid(row=6, column=4, padx=5, pady=5)
+
+# Trip GUI
+lbl_trip_src = tk.Label(window, text="Source:")
+lbl_trip_src.grid(row=1, column=6, padx=5, pady=5)
+
+entry_trip_src = tk.Entry(window)
+entry_trip_src.grid(row=1, column=7, padx=5, pady=5)
+
+lbl_trip_dest = tk.Label(window, text="Destination:")
+lbl_trip_dest.grid(row=2, column=6, padx=5, pady=5)
+
+entry_trip_dest = tk.Entry(window)
+entry_trip_dest.grid(row=2, column=7, padx=5, pady=5)
+
+lbl_trip_departs = tk.Label(window, text="Departs:")
+lbl_trip_departs.grid(row=3, column=6, padx=5, pady=5)
+
+entry_trip_departs = tk.Entry(window)
+entry_trip_departs.grid(row=3, column=7, padx=5, pady=5)
+
+lbl_trip_arrives = tk.Label(window, text="Arrives:")
+lbl_trip_arrives.grid(row=4, column=6, padx=5, pady=5)
+
+entry_trip_arrives = tk.Entry(window)
+entry_trip_arrives.grid(row=4, column=7, padx=5, pady=5)
+
+lbl_trip_price = tk.Label(window, text="Price:")
+lbl_trip_price.grid(row=5, column=6, padx=5, pady=5)
+
+entry_trip_price = tk.Entry(window)
+entry_trip_price.grid(row=5, column=7, padx=5, pady=5)
+
+btn_trip_add = tk.Button(window, text="Add Trip", command=lambda: add_trip())
+btn_trip_add.grid(row=6, column=6, padx=5, pady=5)
+
+btn_trip_update = tk.Button(window, text="Update Trip", command=lambda: update_trip())
+btn_trip_update.grid(row=6, column=7, padx=5, pady=5)
+
+window.mainloop()
+
 
 
 
