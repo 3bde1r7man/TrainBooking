@@ -90,13 +90,13 @@ class UpdateTripView:
         self.trip_price = tk.Entry(self.root)
         self.trip_price.pack()
 
-        add_trip_btn = tk.Button(self.root, text="Add Trip", command=lambda: self.addTrip())
+        add_trip_btn = tk.Button(self.root, text="Add Trip", command=lambda: self.updateTrip())
         add_trip_btn.pack()
 
         self.root.mainloop()
 
-    def update_trip(self):
-        self.admin.add_trip(
+    def updateTrip(self):
+        self.admin.update_trip(
             self.trip_id.get(), self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(),
         )
         
