@@ -7,10 +7,30 @@ from Class import Class
 # Create the main Tkinter window
 
 class TrainManagerGUI:
-    def __init__(self, adminId = None):
+    def __init__(self, adminId = 1):
         self.adminId = adminId
         self.root = tk.Tk()
         self.root.title("Train Manager")
+        self.root.geometry("450x450")
+        self.name_entry = None
+        self.details_entry = None
+        self.class_listbox = None
+        
+        self.add_train_button = tk.Button(self.root, text="Add Train", command=self.addTrain)
+        self.add_train_button.pack()
+        
+        self.edit_train_button = tk.Button(self.root, text="Edit Train", command=self.edit_train)
+        self.edit_train_button.pack()
+        
+    def populate_class_list(self):
+        classes = Class()
+        classes = classes.getClasses()
+        for class_data in classes:
+            self.class_listbox.insert(tk.END, f"{class_data[1]} (${class_data[2]})")
+
+    def addTrain(self):
+        self.root = tk.Tk()
+        self.root.title("add Train")
         self.root.geometry("450x450")
         self.name_label = tk.Label(self.root, text="Name:")
         self.name_label.pack()
@@ -26,22 +46,11 @@ class TrainManagerGUI:
         self.class_label.pack()
         self.class_listbox = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
         self.class_listbox.pack()
-        
-        self.seats_entries = []
-        
+
         self.add_train_button = tk.Button(self.root, text="Add Train", command=self.add_train)
         self.add_train_button.pack()
-        
-        self.edit_train_button = tk.Button(self.root, text="Edit Train", command=self.edit_train)
-        self.edit_train_button.pack()
-        
+
         self.populate_class_list()
-        
-    def populate_class_list(self):
-        classes = Class()
-        classes = classes.getClasses()
-        for class_data in classes:
-            self.class_listbox.insert(tk.END, f"{class_data[1]} (${class_data[2]})")
 
     def add_train(self):
         name = self.name_entry.get()
@@ -70,9 +79,7 @@ class TrainManagerGUI:
             train.classes[class_id] = [class_name, class_price, n_seats]
         
         train.addTrain()
-        
         messagebox.showinfo("Success", "Train added successfully")
-        
         self.name_entry.delete(0, tk.END)
         self.details_entry.delete(0, tk.END)
         self.class_listbox.selection_clear(0, tk.END)
@@ -80,7 +87,7 @@ class TrainManagerGUI:
     def enter_seats(self, class_name):
         seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
         return seats
-        
+
     def edit_train(self):
         selected_train_index = self.select_train()
         if selected_train_index is None:
@@ -111,13 +118,11 @@ class TrainManagerGUI:
         return int(rows[selected_index - 1][0])
 
     def choose_edit_option(self):
-        # Display a dialog to choose between editing train details or train classes
-        return tk.messagebox.askquestion("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
+        return tk.simpledialog.askinteger("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
 
     def edit_train_details(self, train):
-        # Prompt the user to enter new train details
         new_name = tk.simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=train.name)
-        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=train.details)
+        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=train.description)
 
         if new_name and new_details:
             train.name = new_name
@@ -132,24 +137,22 @@ class TrainManagerGUI:
         if selected_class_index is None:
             return
 
-        selected_class_id = list(train.classes.keys())[selected_class_index]
-
-        new_seats = self.enter_seats(train.classes[selected_class_id][0])
+        new_seats = self.enter_seats(train.classes[selected_class_index][0])
         if new_seats is None:
             return
 
-        train.classes[selected_class_id][2] = new_seats
-        train.editTrainClass(selected_class_id)
+        train.classes[selected_class_index][2] = new_seats
+        train.editTrainClass(selected_class_index)
         tk.messagebox.showinfo("Success", "Train class edited successfully")
 
     def select_train_class(self, train):
-        # Display the train's classes and prompt the user to select a class to edit
-        class_names = [class_data[0] for class_data in train.classes.values()]
-        selected_index = tk.simpledialog.askinteger("Select Train Class", "Select a class to edit:", minvalue=1, maxvalue=len(class_names))
+        class_names = [f"{class_id} - {train.classes[class_id][0]} Number of Seats: {train.classes[class_id][2]}" for class_id in train.classes]
+        prompt = "\n".join(class_names)
+        selected_index = tk.simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1, maxvalue=len(class_names))
         if selected_index is None:
             return None
 
-        return selected_index - 1
+        return selected_index
 
     def enter_seats(self, class_name):
         return tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")

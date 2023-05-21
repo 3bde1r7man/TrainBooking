@@ -24,7 +24,7 @@ class Train():
                 nSeats = row[1]
                 cursor.execute('SELECT className, price FROM Class where classId = ?', (classId,))
                 row2 = cursor.fetchone()
-                classatt = (row2[0], row2[1], nSeats)
+                classatt = [row2[0], row2[1], nSeats]
                 self.classes[classId] = classatt
             conn.close()
 
@@ -58,7 +58,7 @@ class Train():
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         query = 'UPDATE TrainClass SET nSeats = ? WHERE trainId = ? AND classId = ?'
-        values = (self.classes[whichClass][1], self.trainId, whichClass)
+        values = (self.classes[whichClass][2], self.trainId, whichClass)
         cursor.execute(query , values)
         conn.commit()
         conn.close()
