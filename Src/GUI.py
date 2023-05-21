@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 import datetime
 import sqlite3
+from Admin import Admin
 
 # Create the main Tkinter window
 window = tk.Tk()
@@ -134,48 +135,6 @@ btn_train_edit.grid(row=5, column=5, padx=5, pady=5)
 btn_train_class_edit = tk.Button(window, text="Edit Train Class", command=lambda: edit_train_class())
 btn_train_class_edit.grid(row=6, column=4, padx=5, pady=5)
 
-# Trip GUI
-lbl_trip_src = tk.Label(window, text="Source:")
-lbl_trip_src.grid(row=1, column=6, padx=5, pady=5)
-
-entry_trip_src = tk.Entry(window)
-entry_trip_src.grid(row=1, column=7, padx=5, pady=5)
-
-lbl_trip_dest = tk.Label(window, text="Destination:")
-lbl_trip_dest.grid(row=2, column=6, padx=5, pady=5)
-
-entry_trip_dest = tk.Entry(window)
-entry_trip_dest.grid(row=2, column=7, padx=5, pady=5)
-
-lbl_trip_departs = tk.Label(window, text="Departs:")
-lbl_trip_departs.grid(row=3, column=6, padx=5, pady=5)
-
-entry_trip_departs = tk.Entry(window)
-entry_trip_departs.grid(row=3, column=7, padx=5, pady=5)
-
-lbl_trip_arrives = tk.Label(window, text="Arrives:")
-lbl_trip_arrives.grid(row=4, column=6, padx=5, pady=5)
-
-entry_trip_arrives = tk.Entry(window)
-entry_trip_arrives.grid(row=4, column=7, padx=5, pady=5)
-
-lbl_trip_price = tk.Label(window, text="Price:")
-lbl_trip_price.grid(row=5, column=6, padx=5, pady=5)
-
-entry_trip_price = tk.Entry(window)
-entry_trip_price.grid(row=5, column=7, padx=5, pady=5)
-
-btn_trip_add = tk.Button(window, text="Add Trip", command=lambda: add_trip())
-btn_trip_add.grid(row=6, column=6, padx=5, pady=5)
-
-btn_trip_update = tk.Button(window, text="Update Trip", command=lambda: update_trip())
-btn_trip_update.grid(row=6, column=7, padx=5, pady=5)
-
-window.mainloop()
-
-
-
-
 class GUI:
     def __init__(self):
         self.root = tk.Tk()
@@ -183,6 +142,7 @@ class GUI:
 
         self.conn = sqlite3.connect('db.sqlite3')
         self.cursor = self.conn.cursor()
+        self.admin = Admin()
 
         # Initialize the GUI elements
         self.init_elements()
@@ -212,20 +172,14 @@ class GUI:
         book_trip_btn = tk.Button(self.root, text="Book Trip", command=self.book_trip)
         book_trip_btn.pack()
 
+        
+
     def add_train(self):
         # Implement the logic for adding a train
         pass
 
     def update_train(self):
         # Implement the logic for updating a train
-        pass
-
-    def add_trip(self):
-        # Implement the logic for adding a trip
-        pass
-
-    def update_trip(self):
-        # Implement the logic for updating a trip
         pass
 
     def show_available_seats(self):

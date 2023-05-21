@@ -106,7 +106,7 @@ class Admin:
         trip.departs = departs
         trip.arrives = arrives
         trip.price = price
-        trip.add_trip_to_database()
+        trip.add_trip_to_database(self.adminId, 1)
 
     def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None):
         trip = Trip(trip_id)
