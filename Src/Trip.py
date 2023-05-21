@@ -12,7 +12,7 @@ class Trip:
         self.price = None
         self.tripId = tripId
         if tripId is not None:
-            cursor.execute(f'SELECT * FROM Trip WHERE id = ?', (tripId,))
+            cursor.execute(f'SELECT * FROM Trip WHERE tripId = ?', (tripId))
             data = cursor.fetchone()
             self.src = data[0]
             self.dest = data[1]
