@@ -1,75 +1,72 @@
 import sqlite3
 from Customer import Customer
+from tkinter import messagebox
+conn = sqlite3.connect('db.sqlite3')
+cursor = conn.cursor()
 
 
-class Ticket():
-    def __init__(self, TicketId = None):
+class Ticket:
+    def __init__(self, TicketId=None):
         self.ticketId = None
         self.bookedSeats = None
         self.customerId = None
-        self.tripId = None  
+        self.tripId = None
         self.classId = None
         self.totalPrice = None
-        self.passengers = None  
+        self.passengers = None
         if TicketId is not None:
             self.ticketId = TicketId
-            conn = sqlite3.connect('db.sqlite3')
-            cursor = conn.cursor()
-            query = 'SELECT bookedSeats, customerId, tripId, classId FROM Ticket WHERE TicketId = ?'
-            values = (TicketId)
-            cursor.execute(query, values)
+            cursor.execute(f'SELECT bookedSeats, customerId, tripId, classId FROM Ticket WHERE TicketId = {TicketId}')
             row = cursor.fetchone()
             self.bookedSeats = row[0]
             self.customerId = row[1]
             self.tripId = row[2]
             self.classId = row[3]
-            query = 'SELECT name, age FROM Passenger WHERE ticketId = ?'
-            values = (TicketId)
-            cursor.execute(query, values)
+            cursor.execute(f'SELECT name, age FROM Passenger WHERE ticketId = {TicketId}')
             rows = cursor.fetchall()
             self.passengers = []
             for row in rows:
                 passenger = [row[0], row[1]]
                 self.passengers.append(passenger)
-            conn.close()
-    
+
     def addTicket(self):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        query = 'INSERT INTO Ticket  (bookedSeats, customerId, tripId, classId) VALUES (?,?,?,?)'
-        values = (self.bookedSeats, self.customerId, self.tripId, self.classId)
-        cursor.execute(query, values)
+        cursor.execute(
+            f'INSERT INTO Ticket (bookedSeats, customerId, tripId, classId) VALUES (?, ?, ?, ?)',
+            (self.bookedSeats, self.customerId, self.tripId, self.classId))
         conn.commit()
-        query = 'INSERT INTO Passenger (name, age, ticketId)'
+
+        cursor.execute(f'SELECT MAX(TicketId) FROM Ticket WHERE customerId = {self.customerId}')
+        self.ticketId = cursor.fetchone()[0]
+
         for passenger in self.passengers:
-            values = (passenger[0], passenger[1], self.ticketId)
-            cursor.execute(query, values)
+            cursor.execute(
+                f'INSERT INTO Passenger (name, age, ticketId) VALUES (?, ?, ?)',
+                (passenger[0], passenger[1], self.ticketId))
             conn.commit()
-        
+
         customer = Customer(self.customerId)
-        values = (customer.name, customer.customerAge(), self.ticketId)
-        cursor.execute(query, values)
+        cursor.execute(
+            f'INSERT INTO Customer_Ticket (name, age, ticketId) VALUES (?, ?, ?)',
+            (customer.name, customer.customerAge(), self.ticketId))
         conn.commit()
-        conn.close()
-    
+
+        messagebox.showinfo("Success", "Ticket added successfully")
+
     def deleteTicket(self):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        query = 'DELETE FROM Ticket WHERE TicketId =?'
-        values = (self.ticketId)
-        cursor.execute(query, values)
+        cursor.execute(f'DELETE FROM Ticket WHERE TicketId = {self.ticketId}')
         conn.commit()
-        query = 'DELETE FROM Passenger WHERE ticketId =?'
-        values = (self.ticketId)    
-        cursor.execute(query, values)
+
+        cursor.execute(f'DELETE FROM Passenger WHERE ticketId = {self.ticketId}')
         conn.commit()
-        conn.close()
-    
+
+        messagebox.showinfo("Success", "Ticket deleted successfully")
+
     def calculatePrice(self):
+        customer = Customer()
         classPrice = self.classPrice()
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
-        normalPrice = tripPrice 
+        normalPrice = tripPrice
         for row in self.passengers:
             age = row[1]
             if age < 10:
@@ -81,23 +78,13 @@ class Ticket():
             self.totalPrice += price
 
     def classPrice(self):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        query = 'SELECT Price FROM Class WHERE classId =?'
-        values = (self.classId) 
-        cursor.execute(query, values)
+        cursor.execute(f'SELECT Price FROM Class WHERE classId = {self.classId}')
         row = cursor.fetchone()
         classPrice = float(row[0])
-        conn.close()
         return classPrice
-    
+
     def tripPrice(self):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        query = 'SELECT Price FROM Trip WHERE tripId =?'
-        values = (self.tripId)
-        cursor.execute(query, values)
+        cursor.execute(f'SELECT Price FROM Trip WHERE tripId = {self.tripId}')
         row = cursor.fetchone()
         tripPrice = float(row[0])
-        conn.close()
         return tripPrice
