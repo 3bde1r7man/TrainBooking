@@ -1,0 +1,93 @@
+#---------------------------------------------------------------------
+# Author         : Abdelrhman Mostafa Hessain & Ahmed Hanafy Bekheet 
+# Date           : 3 / 2 /2022
+# Version        : 1.0
+# Python Version : 3.10.0
+# Pesudo Code    :
+# 1. Create the window
+# 2. Create a start button to show available countries in the excel file
+# 3. Create a Button to each country
+# 4. If country button clicked will show statistics of chosen Button by user
+# 5. A Button to get Highest State with population and Lowest State with population
+# 6. A Back Button to return to available countries
+#---------------------------------------------------------------------
+
+from tkinter import *
+import openpyxl
+
+root = Tk()
+root.title("population")
+root.geometry("450x150")
+Sheet = openpyxl.load_workbook('New Microsoft Excel Worksheet.xlsx')
+sheets = Sheet.sheetnames
+
+start_button = Button(root, text="Start",command= lambda: Buttons(),width= 20)
+start_button.grid(row=0, column=0)
+
+def Buttons():
+    '''Create a Button to each country'''
+    for x in root.winfo_children():
+        x.destroy()
+    rows = 0
+    col = 0
+    for i in sheets:
+        Button(root, text= i, command= lambda i = i: country(i), width= 20).grid(row=rows, column=col)
+        rows += 1
+
+
+
+def specific():
+    '''To show the Highest State with population and Lowest State with population'''
+    for x in root.winfo_children():
+        x.destroy()
+
+    cells = country_sheet[country_sheet.dimensions]
+    highest_population = ['',0]
+    lowest_population = ['',1000000000000000000]
+    label_1 = Label(root, text="",width=15)
+    label_2 = Label(root, text="",width=15)
+    lis1 = ""
+    lis2 = "" 
+    for c1 , c2 in cells: 
+        (highest_population[0],highest_population[1]) = (c1.value,c2.value) if highest_population[1] < c2.value else (highest_population[0],highest_population[1])
+        (lowest_population[0],lowest_population[1]) = (c1.value,c2.value) if lowest_population[1] > c2.value else (lowest_population[0],lowest_population[1])
+        
+    lis1 = f"{lis1 + str(highest_population[0])}\n"+f"{lis1 + str(lowest_population[0])}\n"
+    lis2 = f"{lis2 + str(highest_population[1])}\n"+f"{lis2 + str(lowest_population[1])}\n" 
+    label_1.config(text= lis1)
+    label_2.config(text= lis2)
+    label_1.grid(row=0,column=0)
+    label_2.grid(row=0,column=1)
+    Button(root,text="Back",command=Buttons,width=20).grid(row=1,column=0)
+    
+
+def country(i):
+    '''Draw the country  States Population'''
+    global country_sheet
+    for x in root.winfo_children():
+        x.destroy()
+    
+    label_1 = Label(root, text="",width=15)
+    label_2 = Label(root, text="",width=15)
+    lis1 = ""
+    lis2 = ""    
+    country_sheet = Sheet[i]
+    cells = country_sheet[country_sheet.dimensions]
+    total_population = 0
+    for c1 , c2 in cells:
+        lis1 = f"{lis1 + str(c1.value)}\n"
+        lis2 = f"{lis2 + str(c2.value)}\n"
+        total_population += int(c2.value)
+    lis1 += "Total Population"
+    lis1 += ""
+    lis2 += f"{str(total_population)}"
+    label_1.config(text= lis1)
+    label_2.config(text= lis2)
+    label_1.grid(row=0,column=0)
+    label_2.grid(row=0,column=1)
+    Button(root,text="show specific population",command=specific,width=20).grid()
+    Button(root,text="Back",command= lambda:Buttons(),width=20).grid(row=1,column=1)
+
+
+
+root.mainloop()
