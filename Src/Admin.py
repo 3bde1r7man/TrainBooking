@@ -98,16 +98,17 @@ class Admin:
         train.editTrain()
         return True
 
-    def add_trip(self, src, dest, departs, arrives, price):
+    def add_trip(self, src, dest, departs, arrives, price, trainID):
         trip = Trip()
         trip.src = src
         trip.dest = dest
         trip.departs = departs
         trip.arrives = arrives
         trip.price = price
-        trip.add_trip_to_database(self.adminId, 1)
+        trip.trainId = trainID
+        trip.add_trip_to_database(self.adminId)
 
-    def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None):
+    def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None, trainId=None):
         trip = Trip(trip_id)
         if src:
             trip.src = src
@@ -119,6 +120,8 @@ class Admin:
             trip.arrives = arrives
         if price:
             trip.price = price
+        if trainId:
+            trip.trainId = trainId
         trip.update_trip_to_database()
 
     def update_name(self, name):
