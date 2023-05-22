@@ -8,26 +8,87 @@ class MainApp:
         self.root = tk.Tk()
         self.root.title("Main App")
 
-        self.container = ttk.Frame(self.root)
-        self.container.pack(padx=10, pady=10)
+        # Set the style for the application
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
 
-        sign_in_button = ttk.Button(self.container, text="Sign In", command=self.show_sign_in)
-        sign_in_button.grid(row=0, column=0, pady=10)
+        # Configure style for specific elements
+        self.style.configure("TButton",
+                             padding=10,
+                             relief="flat",
+                             font=("Helvetica", 12),
+                             background="#007bff",
+                             foreground="white")
+        self.style.map("TButton",
+                       background=[("active", "#0056b3")],
+                       foreground=[("active", "white")])
 
-        sign_up_button = ttk.Button(self.container, text="Sign Up", command=self.show_sign_up)
-        sign_up_button.grid(row=0, column=1, padx=5, pady=10)
+        self.style.configure("TLabel",
+                             padding=5,
+                             font=("Helvetica", 12),
+                             foreground="#333333")
+
+        self.style.configure("TEntry",
+                             padding=5,
+                             font=("Helvetica", 12))
+
+        # Create the home page
+        self.create_home_page()
 
         self.root.mainloop()
+
+    def create_home_page(self):
+        home_frame = ttk.Frame(self.root)
+        home_frame.pack(padx=10, pady=10)
+
+        # Add a header
+        header_label = ttk.Label(home_frame,
+                                 text="Welcome to Your App",
+                                 style="Header.TLabel")
+        header_label.pack(pady=20)
+
+
+
+        # Add descriptive text
+        description_label = ttk.Label(home_frame,
+                                      text="Train Reservation system using sql and python gui created by tkinter",
+                                      style="Description.TLabel")
+        description_label.pack(pady=20)
+
+        # Add a sign in button
+        sign_in_button = ttk.Button(home_frame,
+                                    text="Sign In",
+                                    command=self.show_sign_in,
+                                    style="TButton")
+        sign_in_button.pack(pady=10)
+
+        # Add a sign up button
+        sign_up_button = ttk.Button(home_frame,
+                                    text="Sign Up",
+                                    command=self.show_sign_up,
+                                    style="TButton")
+        sign_up_button.pack()
+
+        # Apply custom styles for header and description labels
+        self.style.configure("Header.TLabel",
+                             font=("Helvetica", 20, "bold"),
+                             foreground="#333333")
+
+        self.style.configure("Description.TLabel",
+                             font=("Helvetica", 14),
+                             foreground="#555555")
 
     def show_sign_in(self):
         self.root.withdraw()
         sign_in_window = SignInWindow(self.root, self)
 
     def show_sign_up(self):
-        self.root.deiconify()
+        self.root.withdraw()
         sign_up_window = SignUpWindow(self.root, self)
 
-
+import tkinter as tk
+from tkinter import ttk, messagebox
+from Admin import Admin
 
 class SignInWindow:
     def __init__(self, parent, main_app):
