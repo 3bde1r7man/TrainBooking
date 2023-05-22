@@ -72,7 +72,7 @@ cursor.execute('''
 CREATE TABLE Trip
 (
     src VARCHAR(20) NOT NULL,
-    dist VARCHAR(20) NOT NULL,
+    dest VARCHAR(20) NOT NULL,
     departs DATE NOT NULL,
     arrives DATE NOT NULL,
     price FLOAT NOT NULL,
