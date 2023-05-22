@@ -1,8 +1,8 @@
 import sqlite3
 
 
-conn = sqlite3.connect('db.sqlite3')
-c = conn.cursor()
+# conn = sqlite3.connect('db.sqlite3')
+# c = conn.cursor()
 
 # c.execute('INSERT INTO Class (ClassName, price) VALUES(?, ?)',("Class A",  700))
 # conn.commit()
@@ -10,7 +10,7 @@ c = conn.cursor()
 # conn.commit()
 # c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class C",  500))
 # conn.commit()
-conn.close()
+# conn.close()
 
 class Class():
     def __init__(self):
