@@ -10,7 +10,7 @@ def enter_seats(class_name):
     return seats
 
 
-class AddTrain():
+class AddTrain:
     def __init__(self, parent, adminId):
         self.admin = Admin(adminId)
         self.root = tk.Toplevel(parent)
@@ -72,7 +72,7 @@ class AddTrain():
         else:
             messagebox.showerror("Error", "Error adding train")
 
-class EditTrain():
+class EditTrain:
     def __init__(self, adminId):
         self.admin = Admin(adminId)
         selected_train_index = self.select_train()

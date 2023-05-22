@@ -1,18 +1,32 @@
 import sqlite3
 import datetime
 from tkinter import messagebox
-from tkinter import*
-from tkinter import ttk
-import tkinter as tk
-class CustomerData:
+
+class Customer:
     def __init__(self, customerId=None):
-        self.name = ""
-        self.DOB  = None
-        self.email = ""
-        self.password = ""
-        self.phone = ""
+        self.customerId = customerId
+        self.name = None
+        self.DOB = None
+        self.email = None
+        self.password = None
+        self.phone = None
+        if customerId is not None:
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT name, password, DOB, email FROM Customer WHERE customerId = {customerId}")
+            data = cursor.fetchone()
+            self.name = data[0]
+            self.password = data[1]
+            self.DOB = data[2]
+            self.email = data[3]
+
+            cursor.execute(f"SELECT phoneNum FROM Customer_phoneNum WHERE customerId = {customerId}")
+            data = cursor.fetchall()
+            self.phone = []
+            for row in data:
+                self.phone.append(row[0])
     
-    def Sign_up(self,username,birthdate,phonenum,email,password):
+    def Sign_up(self, username, birthdate, phonenum, email, password):
 
         self.name = username
         self.DOB = birthdate
@@ -27,13 +41,13 @@ class CustomerData:
         if cursor.fetchone() == None:
             cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{self.name}", "{self.DOB}", "{self.email}", "{self.password}") ''')
             conn.commit()
-            cursor.execute(f''' SELECT custmerId FROM Customer WHERE email = "{self.email}" ''')
-            customerId = cursor.fetchone()
-            if customerId == None:
+            cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{self.email}" ''')
+            self.customerId = cursor.fetchone()[0]
+            if self.customerId == None:
                 messagebox.showerror("Error", "email is not exist")
             else:
                 messagebox.showinfo("success", "Account created successfully")
-                cursor.execute(f'''INSERT INTO Customer_PhoneNum (custmerId, phoneNum) values ("{customerId[0]}","{self.phone}") ''')
+                cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{self.customerId[0]}","{self.phone}") ''')
                 conn.commit()
                 return True
         else:
@@ -56,12 +70,13 @@ class CustomerData:
                 messagebox.showerror("Error", "email is not correct or you did not register")
             else:
                 if result[0] == password:
-                    cursor.execute(f''' SELECT name, DOB, email, password FROM Customer WHERE email = "{email}" ''')
+                    cursor.execute(f''' SELECT name, DOB, email, password, customerId FROM Customer WHERE email = "{email}" ''')
                     result2 = cursor.fetchone()
                     self.name = result2[0]
                     self.DOB = result2[1]
                     self.email = result2[2]
                     self.password = result2[3]
+                    self.customerId = result2[4]
                     messagebox.showinfo("Success", f"Login successful, Welcome {self.name}")
                     return True
                 else:
@@ -112,66 +127,67 @@ class CustomerData:
                 return False
             else:
                 self.phone =Phone
-                cursor.execute(f''' SELECT custmerID FROM Customer WHERE email = "{self.email}" ''')
+                cursor.execute(f''' SELECT customerID FROM Customer WHERE email = "{self.email}" ''')
                 customerid = cursor.fetchone()
-                cursor.execute(f''' UPDATE Customer_phoneNum SET phoneNum ="{self.phone}" WHERE custmerId = "{customerid[0]}" ''')
+                cursor.execute(f''' UPDATE Customer_phoneNum SET phoneNum ="{self.phone}" WHERE customerId = "{customerid[0]}" ''')
                 messagebox.showinfo("Success","Phone updated successfully")
                 conn.commit()
                 conn.close()
                 return True  
     def update_email(self,Email,NEmail):
-            conn = sqlite3.connect('db.sqlite3')
-            cursor = conn.cursor()
-            self.email =Email
-            cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
-            if cursor.fetchone() == None:
-                messagebox.showerror("Erroe","Email not found please sign up first")
-                conn.close()
-                return False
-            else:
-                old_email = self.email
-                self.email =NEmail
-                cursor.execute(f''' UPDATE Customer SET email ="{self.email}" WHERE email = "{old_email}" ''')
-                messagebox.showinfo("Success","Email updated successfully")
-                conn.commit()
-                conn.close()
-                return True
-    def Booktrip(self,Src,Dest):
-            conn = sqlite3.connect('db.sqlite3')
-            cursor = conn.cursor()
-            src = Src
-            dist = Dest
-            cursor.execute(f''' SELECT t1.tripId FROM Trip AS t1 JOIN TripCustomer AS t2 ON t1.tripId = t2.tripId WHERE t1.src = "{src}" AND t1.dist = "{dist}" ''')
-            Tid = cursor.fetchone()
-            if Tid != None:
-                messagebox.showerror("Error", "this trip already booked")
-                return False
-            cursor.execute(f''' SELECT tripId FROM Trip where src = "{src}" and dest = "{dist}"''')
-            tripid = cursor.fetchone()
-            if tripid == None:
-                print("this trip is not exist\n")
-                return False
-            cursor.execute(f''' SELECT MAX(custmerId) FROM TripCustomer''')
-            customerid = cursor.fetchone()
-            if customerid[0] == None:
-                cursor.execute(f'''INSERT INTO TripCustomer (tripId,custmerId) values ("{tripid[0]}","{1}") ''')
-            else:
-                Cid = int(customerid[0]) + 1
-                cursor.execute(f'''INSERT INTO TripCustomer (tripId,custmerId) values ("{tripid[0]}","{Cid}") ''')
-            messagebox.showinfo("success", "trip booked successfully")
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        self.email =Email
+        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
+        if cursor.fetchone() == None:
+            messagebox.showerror("Erroe","Email not found please sign up first")
+            conn.close()
+            return False
+        else:
+            old_email = self.email
+            self.email =NEmail
+            cursor.execute(f''' UPDATE Customer SET email ="{self.email}" WHERE email = "{old_email}" ''')
+            messagebox.showinfo("Success","Email updated successfully")
             conn.commit()
             conn.close()
             return True
-    def Cancel_trip(self,Tripid):
+    def Booktrip(self, tripId):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute(f''' SELECT customerId FROM CustomerTrip WHERE tripId = {tripId} AND customerId = {self.customerId} ''')
+        if cursor.fetchone() == None:
+            cursor.execute(f''' INSERT INTO CustomerTrip (customerId, tripId) VALUES(?, ?)''' , (self.customerId, tripId))
+            conn.commit()
+            messagebox.showinfo("Success","Booked successfully")
+        else:
+            messagebox.showinfo("ERROR","You aleardy booked this Trip")
+            
+    def Cancel_trip(self, Tripid):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         tripid =Tripid
-        cursor.execute(f''' select tripId FROM TripCustomer WHERE tripId = "{tripid}" ''')
+        cursor.execute(f''' SELECT tripId FROM TripCustomer WHERE tripId = ? AND  customerId = ? ''', (tripid, self.customerId))
         if cursor.fetchone() == None:
             messagebox.showerror("Error", "this trip is not exist")
             return False
-        cursor.execute(f''' DELETE FROM TripCustomer WHERE tripId = "{tripid}" ''')
-        messagebox.showinfo("Success", "trip canceled successfully")
+        cursor.execute(f'''DELETE FROM TripCustomer WHERE tripId = ? AND customerId = ?''', (tripid, self.customerId))
         conn.commit()
+        messagebox.showinfo("Success", "Trip canceled successfully")
         conn.close()
-        return True                 
+        return True
+
+    def View_trip(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute(f''' SELECT MAX(tripId) FROM TripCustomer WHERE customerId = "{self.customerId}" ''')   
+        row = cursor.fetchone()
+        if row == None:
+            messagebox.showerror("Error", "You have not booked any trip")
+        else:
+            return row
+
+
+    def customerAge(self):
+        today = datetime.date.today()
+        age = today.year - self.DOB.year - ((today.month, today.day) < (self.DOB.month, self.DOB.day))
+        return age

@@ -7,10 +7,10 @@ cursor = conn.cursor()
 
 
 class Ticket:
-    def __init__(self, TicketId=None):
+    def __init__(self, TicketId=None, customerId=None):
         self.ticketId = None
         self.bookedSeats = None
-        self.customerId = None
+        self.customerId = customerId
         self.tripId = None
         self.classId = None
         self.totalPrice = None
@@ -66,7 +66,6 @@ class Ticket:
         messagebox.showinfo("Success", "Ticket deleted successfully")
 
     def calculatePrice(self):
-        customer = Customer()
         classPrice = self.classPrice()
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
@@ -80,8 +79,18 @@ class Ticket:
             else:
                 price = normalPrice
             self.totalPrice += price
+        customer = Customer(self.customerId)
+        age = customer.customerAge()
+        if age < 10:
+            price = 0.5 * normalPrice
+        elif age < 60:
+            price = .5 * normalPrice
+        else:
+            price = normalPrice
+        self.totalPrice += price
+        return self.totalPrice
 
-    def calculatenSeats(self, tripId):
+    def calculatenSeats(self):
         cursor.execute(f'''SELECT TrainClass.avlSeats
                             FROM Train
                             INNER JOIN Trip ON Train.trainId = Trip.trainId

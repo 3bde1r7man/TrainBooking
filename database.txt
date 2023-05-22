@@ -2,7 +2,7 @@
 cursor.execute('''
 CREATE TABLE Customer
 (
-    custmerId INTEGER PRIMARY KEY AUTOINCREMENT,
+    customerId INTEGER PRIMARY KEY AUTOINCREMENT,
     password VARCHAR(20) NOT NULL,
     email VARCHAR(20) NOT NULL,
     DOB DATE NOT NULL,
@@ -60,9 +60,9 @@ cursor.execute('''
 CREATE TABLE Customer_phoneNum
 (
     phoneNum INT NOT NULL,
-    custmerId INT NOT NULL,
-    PRIMARY KEY (phoneNum, custmerId),
-    FOREIGN KEY (custmerId) REFERENCES Customer(custmerId)
+    customerId INT NOT NULL,
+    PRIMARY KEY (phoneNum, customerId),
+    FOREIGN KEY (customerId) REFERENCES Customer(customerId)
 );
 
 ''')
@@ -89,10 +89,10 @@ cursor.execute('''
 
 CREATE TABLE TripCustomer
 (
-    custmerId INT NOT NULL,
+    customerId INT NOT NULL,
     tripId INT NOT NULL,
-    PRIMARY KEY (custmerId, tripId),
-    FOREIGN KEY (custmerId) REFERENCES Customer(custmerId),
+    PRIMARY KEY (customerId, tripId),
+    FOREIGN KEY (customerId) REFERENCES Customer(customerId),
     FOREIGN KEY (tripId) REFERENCES Trip(tripId)
 );
 ''')
@@ -102,10 +102,10 @@ CREATE TABLE Ticket
 (
     ticketId INTEGER PRIMARY KEY AUTOINCREMENT,
     bookedSeats INT NOT NULL,
-    custmerId INT NOT NULL,
+    customerId INT NOT NULL,
     tripId INT NOT NULL,
     classId INT NOT NULL,
-    FOREIGN KEY (custmerId) REFERENCES Customer(custmerId),
+    FOREIGN KEY (customerId) REFERENCES Customer(customerId),
     FOREIGN KEY (tripId) REFERENCES Trip(tripId),
     FOREIGN KEY (classId) REFERENCES Class(classId)
 );
