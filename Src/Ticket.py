@@ -1,15 +1,16 @@
 import sqlite3
 from Customer import Customer
 from tkinter import messagebox
+from Train import Train
 conn = sqlite3.connect('db.sqlite3')
 cursor = conn.cursor()
 
 
 class Ticket:
-    def __init__(self, TicketId=None):
+    def __init__(self, TicketId=None, customerId=None):
         self.ticketId = None
         self.bookedSeats = None
-        self.customerId = None
+        self.customerId = customerId
         self.tripId = None
         self.classId = None
         self.totalPrice = None
@@ -30,27 +31,30 @@ class Ticket:
                 self.passengers.append(passenger)
 
     def addTicket(self):
-        cursor.execute(
-            f'INSERT INTO Ticket (bookedSeats, customerId, tripId, classId) VALUES (?, ?, ?, ?)',
-            (self.bookedSeats, self.customerId, self.tripId, self.classId))
-        conn.commit()
+        if (self.calculatenSeats()):
+            cursor.execute(
+                f'INSERT INTO Ticket (bookedSeats, customerId, tripId, classId) VALUES (?, ?, ?, ?)',
+                (self.bookedSeats, self.customerId, self.tripId, self.classId))
+            conn.commit()
+            cursor.execute(f'SELECT MAX(TicketId) FROM Ticket WHERE customerId = {self.customerId}')
+            self.ticketId = cursor.fetchone()[0]
 
-        cursor.execute(f'SELECT MAX(TicketId) FROM Ticket WHERE customerId = {self.customerId}')
-        self.ticketId = cursor.fetchone()[0]
-
-        for passenger in self.passengers:
+            for passenger in self.passengers:
+                cursor.execute(
+                    f'INSERT INTO Passenger (name, age, ticketId) VALUES (?, ?, ?)',
+                    (passenger[0], passenger[1], self.ticketId))
+                conn.commit()
+            
+            customer = Customer(self.customerId)
             cursor.execute(
                 f'INSERT INTO Passenger (name, age, ticketId) VALUES (?, ?, ?)',
-                (passenger[0], passenger[1], self.ticketId))
+                (customer.name, customer.customerAge(), self.ticketId))
             conn.commit()
+            messagebox.showinfo("Success", "Ticket added successfully")
+        else:
+            messagebox.showerror('Error', 'No seats available')
 
-        customer = Customer(self.customerId)
-        cursor.execute(
-            f'INSERT INTO Customer_Ticket (name, age, ticketId) VALUES (?, ?, ?)',
-            (customer.name, customer.customerAge(), self.ticketId))
-        conn.commit()
 
-        messagebox.showinfo("Success", "Ticket added successfully")
 
     def deleteTicket(self):
         cursor.execute(f'DELETE FROM Ticket WHERE TicketId = {self.ticketId}')
@@ -62,11 +66,11 @@ class Ticket:
         messagebox.showinfo("Success", "Ticket deleted successfully")
 
     def calculatePrice(self):
-        customer = Customer()
         classPrice = self.classPrice()
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
         normalPrice = tripPrice
+        self.totalPrice = 0
         for row in self.passengers:
             age = row[1]
             if age < 10:
@@ -76,6 +80,41 @@ class Ticket:
             else:
                 price = normalPrice
             self.totalPrice += price
+        customer = Customer(self.customerId)
+        age = customer.customerAge()
+        if age < 10:
+            price = 0.5 * normalPrice
+        elif age < 60:
+            price = .5 * normalPrice
+        else:
+            price = normalPrice
+        self.totalPrice += price
+        return self.totalPrice
+
+    def calculatenSeats(self):
+        cursor.execute(f'''SELECT TrainClass.avlSeats
+                            FROM Train
+                            INNER JOIN Trip ON Train.trainId = Trip.trainId
+                            INNER JOIN TrainClass ON TrainClass.trainId = Train.trainId
+                            WHERE tripId = {self.tripId} AND ClassId = {self.classId};
+        ''')
+        row = cursor.fetchone()
+        avlSeats = row[0]
+        if self.bookedSeats > avlSeats:
+            return False
+        else:
+            cursor.execute(f'''SELECT Train.trainId 
+                                FROM Train
+                                INNER JOIN Trip ON Train.trainId = Trip.trainId
+                                WHERE tripId = {self.tripId}
+            ''')
+            row = cursor.fetchone()
+            trainId = row[0]
+            train = Train(trainId)
+            train.updateAvlSeats(self.classId, self.bookedSeats)
+            return True
+        
+
 
     def classPrice(self):
         cursor.execute(f'SELECT Price FROM Class WHERE classId = {self.classId}')

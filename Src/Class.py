@@ -3,11 +3,13 @@ import sqlite3
 
 # conn = sqlite3.connect('db.sqlite3')
 # c = conn.cursor()
-# c.execute('INSERT INTO Class (ClassName, price) VALUES(?, ?)',("Class A",  700))
+# c.execute('DELETE FROM Class')
 # conn.commit()
-# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class B",  600))
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?, ?)',("Class A",  .4))
 # conn.commit()
-# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class C",  500))
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class B",  .3))
+# conn.commit()
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class C",  .2))
 # conn.commit()
 # conn.close()
 

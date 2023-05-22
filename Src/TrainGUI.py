@@ -10,10 +10,10 @@ def enter_seats(class_name):
     return seats
 
 
-class AddTrain():
-    def __init__(self, adminId):
+class AddTrain:
+    def __init__(self, parent, adminId):
         self.admin = Admin(adminId)
-        self.root = tk.Tk()
+        self.root = tk.Toplevel(parent)
         self.root.title("Add Train")
         self.root.geometry("500x500")
         self.name_label = tk.Label(self.root, text="Name:")
@@ -72,7 +72,7 @@ class AddTrain():
         else:
             messagebox.showerror("Error", "Error adding train")
 
-class EditTrain():
+class EditTrain:
     def __init__(self, adminId):
         self.admin = Admin(adminId)
         selected_train_index = self.select_train()
@@ -98,25 +98,26 @@ class EditTrain():
         train_names = [f"{row[0]} - {row[1]}" for row in rows]
         prompt = "\n".join(train_names)
         selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
+        
         if selected_index is None:
             return None
 
         return selected_index
 
     def choose_edit_option(self):
-        return tk.simpledialog.askinteger("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
+        return simpledialog.askinteger("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
 
     def edit_train_details(self):
-        new_name = tk.simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=self.train.name)
-        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=self.train.description)
+        new_name = simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=self.train.name)
+        new_details = simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=self.train.description)
 
         if new_name and new_details:
             self.train.name = new_name
             self.train.description = new_details
             self.admin.update_train(self.train.trainId, self.train.name, self.train.description)
-            tk.messagebox.showinfo("Success", "Train details edited successfully")
+            messagebox.showinfo("Success", "Train details edited successfully")
         else:
-            tk.messagebox.showerror("Error", "Please enter valid train details")
+            messagebox.showerror("Error", "Please enter valid train details")
 
     def edit_train_classes(self):
         selected_class_index = self.select_train_class()
@@ -128,16 +129,17 @@ class EditTrain():
             return
 
         self.admin.update_train_class(self.train.trainId, selected_class_index, new_seats)
-        tk.messagebox.showinfo("Success", "Train class edited successfully")
+        messagebox.showinfo("Success", "Train class edited successfully")
 
     def select_train_class(self):
         class_names = [f"{class_id} - {self.train.classes[class_id][0]} Number of Seats: {self.train.classes[class_id][2]}" for class_id in self.train.classes]
         prompt = "\n".join(class_names)
-        selected_index = tk.simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1, maxvalue=len(class_names))
+        selected_index = simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1, maxvalue=len(class_names))
         if selected_index is None:
             return None
 
         return selected_index
-
+    
+    
 
 
