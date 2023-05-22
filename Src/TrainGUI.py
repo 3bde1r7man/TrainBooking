@@ -140,5 +140,4 @@ class EditTrain():
         return selected_index
 
 
-edit = AddTrain(1)
 
