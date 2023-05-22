@@ -47,6 +47,7 @@ CREATE TABLE TrainClass
     nSeats INT NOT NULL,
     trainId INT NOT NULL,
     classId INT NOT NULL,
+    avlSeats INT NOT NULL,
     PRIMARY KEY (trainId, classId),
     FOREIGN KEY (trainId) REFERENCES Train(trainId),
     FOREIGN KEY (classId) REFERENCES Class(classId)

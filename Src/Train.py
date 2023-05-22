@@ -39,9 +39,9 @@ class Train():
         
         self.trainId = cursor.fetchone()[0]
         if self.trainId is not None:
-            query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
+            query = 'INSERT INTO TrainClass (trainId, classId, nSeats, avlSeats) VALUES (?, ?, ?, ?)'
             for Class in self.classes:
-                values = (self.trainId, Class, self.classes[Class][2])
+                values = (self.trainId, Class, self.classes[Class][2], self.classes[Class][2])
                 cursor.execute(query, values)
                 conn.commit()
             conn.close()
@@ -63,8 +63,8 @@ class Train():
     def editTrainClass(self, whichClass):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        query = 'UPDATE TrainClass SET nSeats = ? WHERE trainId = ? AND classId = ?'
-        values = (self.classes[whichClass][2], self.trainId, whichClass)
+        query = 'UPDATE TrainClass SET nSeats = ?, avlSeats = ? WHERE trainId = ? AND classId = ?'
+        values = (self.classes[whichClass][2], self.classes[whichClass][2], self.trainId, whichClass)
         cursor.execute(query , values)
         conn.commit()
         conn.close()
