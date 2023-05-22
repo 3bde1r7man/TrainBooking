@@ -3,6 +3,7 @@ from tkinter import messagebox, simpledialog
 import sqlite3
 from Train import Train 
 from Class import Class
+from Admin import Admin
 
 def enter_seats(class_name):
     seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
@@ -10,8 +11,8 @@ def enter_seats(class_name):
 
 
 class AddTrain():
-    def __init__(self, adminId = None):
-        self.adminId = adminId
+    def __init__(self, adminId):
+        self.admin = Admin(adminId)
         self.root = tk.Tk()
         self.root.title("Add Train")
         self.root.geometry("500x500")
@@ -53,11 +54,7 @@ class AddTrain():
         classes = classes.getClasses()
         selected_classes = [classes[i] for i in selected_indices]
         
-        train = Train()
-        train.name = name
-        train.description = details
-        train.adminId = self.adminId
-        
+        classes = {}
         for class_data in selected_classes:
             class_id = class_data[0]
             class_name = class_data[1]
@@ -65,9 +62,8 @@ class AddTrain():
             
             n_seats = enter_seats(class_name)
             
-            train.classes[class_id] = [class_name, class_price, n_seats]
-        
-        success = train.addTrain()
+            classes[class_id] = [class_name, class_price, n_seats]
+        success = self.admin.add_train(name, details, classes)
         if success:
             messagebox.showinfo("Success", "Train added successfully")
             self.name_entry.delete(0, tk.END)
@@ -77,7 +73,8 @@ class AddTrain():
             messagebox.showerror("Error", "Error adding train")
 
 class EditTrain():
-    def __init__(self):
+    def __init__(self, adminId):
+        self.admin = Admin(adminId)
         selected_train_index = self.select_train()
         if selected_train_index is None:
             return
@@ -87,9 +84,9 @@ class EditTrain():
         edit_choice = self.choose_edit_option()
 
         if edit_choice == 1:
-            self.edit_train_details(self.train)
+            self.edit_train_details()
         elif edit_choice == 2:
-            self.edit_train_classes(self.train)
+            self.edit_train_classes()
 
     def select_train(self):
         conn = sqlite3.connect('db.sqlite3')
@@ -109,33 +106,32 @@ class EditTrain():
     def choose_edit_option(self):
         return tk.simpledialog.askinteger("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
 
-    def edit_train_details(self, train):
-        new_name = tk.simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=train.name)
-        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=train.description)
+    def edit_train_details(self):
+        new_name = tk.simpledialog.askstring("Edit Train Details", "Enter new train name:", initialvalue=self.train.name)
+        new_details = tk.simpledialog.askstring("Edit Train Details", "Enter new train details:", initialvalue=self.train.description)
 
         if new_name and new_details:
-            train.name = new_name
-            train.description = new_details
-            train.editTrain()
+            self.train.name = new_name
+            self.train.description = new_details
+            self.admin.update_train(self.train.trainId, self.train.name, self.train.description)
             tk.messagebox.showinfo("Success", "Train details edited successfully")
         else:
             tk.messagebox.showerror("Error", "Please enter valid train details")
 
-    def edit_train_classes(self, train):
-        selected_class_index = self.select_train_class(train)
+    def edit_train_classes(self):
+        selected_class_index = self.select_train_class()
         if selected_class_index is None:
             return
 
-        new_seats = enter_seats(train.classes[selected_class_index][0])
+        new_seats = enter_seats(self.train.classes[selected_class_index][0])
         if new_seats is None:
             return
 
-        train.classes[selected_class_index][2] = new_seats
-        train.editTrainClass(selected_class_index)
+        self.admin.update_train_class(self.train.trainId, selected_class_index, new_seats)
         tk.messagebox.showinfo("Success", "Train class edited successfully")
 
-    def select_train_class(self, train):
-        class_names = [f"{class_id} - {train.classes[class_id][0]} Number of Seats: {train.classes[class_id][2]}" for class_id in train.classes]
+    def select_train_class(self):
+        class_names = [f"{class_id} - {self.train.classes[class_id][0]} Number of Seats: {self.train.classes[class_id][2]}" for class_id in self.train.classes]
         prompt = "\n".join(class_names)
         selected_index = tk.simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1, maxvalue=len(class_names))
         if selected_index is None:
@@ -144,4 +140,5 @@ class EditTrain():
         return selected_index
 
 
+edit = AddTrain(1)
 
