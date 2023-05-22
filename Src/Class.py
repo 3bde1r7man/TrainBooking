@@ -1,10 +1,21 @@
 import sqlite3
 
+
+# conn = sqlite3.connect('db.sqlite3')
+# c = conn.cursor()
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?, ?)',("Class A",  700))
+# conn.commit()
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class B",  600))
+# conn.commit()
+# c.execute('INSERT INTO Class (ClassName, price) VALUES(?,?)',("Class C",  500))
+# conn.commit()
+# conn.close()
+
 class Class():
     def __init__(self):
-        self.classId
-        self.name
-        self.price
+        self.classId = None
+        self.name = None
+        self.price = None
 
 
     def addClass(self):
@@ -25,16 +36,5 @@ class Class():
         cursor = conn.cursor()
         cursor.execute('SELECT classId, className, price FROM Class')
         rows = cursor.fetchall()
-        classdict = {}
-        for row in rows:
-            classdict[row[0]] = [row[1], row[2]]
-            print(row[0] + " - " + row[1] +  " - " + row[2] + '\n')
-        
-        classes = input("Select the classes that in the Train (1, 2, 3): ")
-        classes = classes.split(', ')
-        classesdict = {}
-        for Class in classes:
-            nSeats = int(input("Enter the number of Seats for the class " + classdict[Class][0] + "for the Train: "))
-            classesdict[Class] = [classdict[Class], nSeats]
         conn.close()
-        return classesdict
+        return rows

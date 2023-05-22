@@ -81,12 +81,11 @@ class Admin:
         train.description = description
         train.classes = classes
         train.adminId = self.adminId
-        train.addTrain()
-        return
+        return train.addTrain()
 
     def update_train_class(self, trainId, classId, n_seats=None):
         train = Train(trainId)
-        train.classes[classId][1] = n_seats
+        train.classes[classId][2] = n_seats
         train.editTrainClass(classId)
         return True
 
