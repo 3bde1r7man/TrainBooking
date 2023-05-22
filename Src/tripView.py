@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import simpledialog
 from Admin import Admin
 import sqlite3
 
@@ -79,6 +80,8 @@ class AddTripView:
         self.trip_price = tk.Entry(self.root)
         self.trip_price.pack()
 
+        self.trip_train = self.select_train()
+
         add_trip_btn = tk.Button(self.root, text="Add Trip", command=lambda: self.addTrip())
         add_trip_btn.pack()
 
@@ -86,9 +89,24 @@ class AddTripView:
 
     def addTrip(self):
         self.admin.add_trip(
-            self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(),
+            self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)
         )
         
+    def select_train(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('SELECT trainId, name FROM Train')
+        rows = cursor.fetchall()
+        conn.close()
+
+        train_names = [f"{row[0]} - {row[1]}" for row in rows]
+        prompt = "\n".join(train_names)
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
+        
+        if selected_index is None:
+            return None
+
+        return selected_index
 
 class UpdateTripView:
     def __init__(self, adminId, tripId):
@@ -127,6 +145,8 @@ class UpdateTripView:
         self.trip_price = tk.Entry(self.root)
         self.trip_price.pack()
 
+        self.trip_train = self.select_train()
+
         update_trip_btn = tk.Button(self.root, text="Update Trip", command=lambda: self.updateTrip())
         update_trip_btn.pack()
 
@@ -134,6 +154,22 @@ class UpdateTripView:
 
     def updateTrip(self):
         self.admin.update_trip(
-            self.trip_id, self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), 15
+            self.trip_id, self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)
         )
+
+    def select_train(self):
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute('SELECT trainId, name FROM Train')
+        rows = cursor.fetchall()
+        conn.close()
+
+        train_names = [f"{row[0]} - {row[1]}" for row in rows]
+        prompt = "\n".join(train_names)
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
+        
+        if selected_index is None:
+            return None
+
+        return selected_index
         

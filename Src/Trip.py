@@ -22,10 +22,10 @@ class Trip:
             self.price = data[4]
             self.trainId = data[5]
 
-    def add_trip_to_database(self, adminId, trainId):
+    def add_trip_to_database(self, adminId):
         cursor.execute(
             f'INSERT INTO Trip (src, dest, departs, arrives, price, adminId, trainId) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            (self.src, self.dest, self.departs, self.arrives, self.price, adminId, trainId))
+            (self.src, self.dest, self.departs, self.arrives, self.price, adminId, self.trainId))
         conn.commit()
 
         messagebox.showinfo("Success", "Trip added successfully")
