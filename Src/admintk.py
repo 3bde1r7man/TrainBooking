@@ -86,10 +86,6 @@ class MainApp:
         self.root.deiconify()
         sign_up_window = SignUpWindow(self.root, self)
 
-import tkinter as tk
-from tkinter import ttk, messagebox
-from Admin import Admin
-
 class SignInWindow:
     def __init__(self, parent, main_app):
         self.parent = parent
