@@ -36,14 +36,19 @@ class Train():
         cursor.execute(query, values)
         conn.commit()
         cursor.execute(f'SELECT max(trainId) FROM Train WHERE name = "{self.name}" AND details = "{self.description}"')
+        
         self.trainId = cursor.fetchone()[0]
-        query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
-        for Class in self.classes:
-            values = (self.trainId, Class, self.classes[Class][2])
-            cursor.execute(query, values)
-            conn.commit()
-        conn.close()
-        return
+        if self.trainId is not None:
+            query = 'INSERT INTO TrainClass (trainId, classId, nSeats) VALUES (?, ?, ?)'
+            for Class in self.classes:
+                values = (self.trainId, Class, self.classes[Class][2])
+                cursor.execute(query, values)
+                conn.commit()
+            conn.close()
+            return True
+        else: 
+            conn.close()
+            return False
 
     def editTrain(self):
         conn = sqlite3.connect('db.sqlite3')
@@ -53,6 +58,7 @@ class Train():
         cursor.execute(query, values)
         conn.commit()
         conn.close()
+        return True
 
     def editTrainClass(self, whichClass):
         conn = sqlite3.connect('db.sqlite3')
@@ -62,4 +68,5 @@ class Train():
         cursor.execute(query , values)
         conn.commit()
         conn.close()
+        return True
 
