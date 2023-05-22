@@ -79,11 +79,11 @@ class MainApp:
                              foreground="#555555")
 
     def show_sign_in(self):
-        self.root.withdraw()
+        self.root.deiconify()
         sign_in_window = SignInWindow(self.root, self)
 
     def show_sign_up(self):
-        self.root.withdraw()
+        self.root.deiconify()
         sign_up_window = SignUpWindow(self.root, self)
 
 import tkinter as tk
