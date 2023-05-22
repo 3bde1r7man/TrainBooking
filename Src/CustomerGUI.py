@@ -209,7 +209,7 @@ class BookTrip:
             self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
             self.lbl_trip_train.pack()
 
-            update_trip_btn = tk.Button(self.root, text="Update Trip", command=lambda: self.bookTrip(row[5], row[6]))
+            update_trip_btn = tk.Button(self.root, text="Book Trip", command=lambda: self.bookTrip(row[5], row[6]))
             update_trip_btn.pack()
 
         self.root.mainloop()
@@ -231,15 +231,15 @@ class BookTrip:
         ticket.tripId = tripId
         price_label = tk.Label(self.root, text=f"Toatal Price: $ {ticket.calculatePrice()}")
         price_label.pack()
-        customer = Customer(customer_id= self.customerId) 
-        book_Trip_btn = tk.Button(self.root, text="book Trip", command=lambda: (ticket.addTicket(), customer.Booktrip(tripId= tripId)))
+        customer = Customer(customerId= self.customerId) 
+        book_Trip_btn = tk.Button(self.root, text="Confirm", command=lambda: (ticket.addTicket(), customer.Booktrip(tripId= tripId)))
         book_Trip_btn.pack()
 
 
     def select_class(self, trainId):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        cursor.execute(f'SELECT classId, className FROM Class, TrainClass WHERE TrainClass.classId = Class.classId AND TrainClass.trainId = {trainId}')
+        cursor.execute(f'SELECT Class.classId, Class.className FROM Class, TrainClass WHERE TrainClass.classId = Class.classId AND TrainClass.trainId = {trainId}')
         classes = cursor.fetchall()
         class_names = [f"{row[0]} - {row[1]}" for row in classes]
         prompt = "\n".join(class_names)
@@ -285,7 +285,7 @@ class CancelTrip:
                 self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
                 self.lbl_trip_train.pack()
 
-                update_trip_btn = tk.Button(self.root, text="Update Trip", command=lambda: self.customer.Cancel_trip(row[6]))
+                update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: self.customer.Cancel_trip(row[6]))
                 update_trip_btn.pack()
         else:
             messagebox.showerror("Error", "You didn't book any trip")

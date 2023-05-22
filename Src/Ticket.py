@@ -70,6 +70,7 @@ class Ticket:
         tripPrice = self.tripPrice()
         tripPrice += tripPrice * classPrice
         normalPrice = tripPrice
+        self.totalPrice = 0
         for row in self.passengers:
             age = row[1]
             if age < 10:
@@ -102,7 +103,7 @@ class Ticket:
         if self.bookedSeats > avlSeats:
             return False
         else:
-            cursor.execute(f'''SELECT trainId 
+            cursor.execute(f'''SELECT Train.trainId 
                                 FROM Train
                                 INNER JOIN Trip ON Train.trainId = Trip.trainId
                                 WHERE tripId = {self.tripId}

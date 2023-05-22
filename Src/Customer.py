@@ -17,7 +17,7 @@ class Customer:
             data = cursor.fetchone()
             self.name = data[0]
             self.password = data[1]
-            self.DOB = data[2]
+            self.DOB = datetime.datetime.strptime(data[2], "%d-%m-%Y")
             self.email = data[3]
 
             cursor.execute(f"SELECT phoneNum FROM Customer_phoneNum WHERE customerId = {customerId}")
@@ -29,7 +29,7 @@ class Customer:
     def Sign_up(self, username, birthdate, phonenum, email, password):
 
         self.name = username
-        self.DOB = birthdate
+        self.DOB = datetime.datetime.strptime(birthdate, "%d-%m-%y")
         self.phone = phonenum
         self.email = email
         self.password = password
@@ -154,9 +154,9 @@ class Customer:
     def Booktrip(self, tripId):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        cursor.execute(f''' SELECT customerId FROM CustomerTrip WHERE tripId = {tripId} AND customerId = {self.customerId} ''')
+        cursor.execute(f''' SELECT customerId FROM TripCustomer WHERE tripId = {tripId} AND customerId = {self.customerId} ''')
         if cursor.fetchone() == None:
-            cursor.execute(f''' INSERT INTO CustomerTrip (customerId, tripId) VALUES(?, ?)''' , (self.customerId, tripId))
+            cursor.execute(f''' INSERT INTO TripCustomer (customerId, tripId) VALUES(?, ?)''' , (self.customerId, tripId))
             conn.commit()
             messagebox.showinfo("Success","Booked successfully")
         else:
