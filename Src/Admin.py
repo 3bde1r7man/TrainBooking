@@ -81,12 +81,11 @@ class Admin:
         train.description = description
         train.classes = classes
         train.adminId = self.adminId
-        train.addTrain()
-        return
+        return train.addTrain()
 
     def update_train_class(self, trainId, classId, n_seats=None):
         train = Train(trainId)
-        train.classes[classId][1] = n_seats
+        train.classes[classId][2] = n_seats
         train.editTrainClass(classId)
         return True
 
@@ -106,7 +105,7 @@ class Admin:
         trip.departs = departs
         trip.arrives = arrives
         trip.price = price
-        trip.add_trip_to_database()
+        trip.add_trip_to_database(self.adminId, 1)
 
     def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None):
         trip = Trip(trip_id)
@@ -128,30 +127,27 @@ class Admin:
         cursor.execute('''UPDATE Admin SET name = ? WHERE adminId = ?''', (name, self.adminId))
         conn.commit()
         conn.close()
-
+        return True 
+    
     def update_email(self, email):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         cursor.execute('''UPDATE Admin SET email = ? WHERE adminId = ?''', (email, self.adminId))
         conn.commit()
         conn.close()
-
-    def update_password(self, old_password, new_password):
+        return True
+    
+    def update_password(self, new_password):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        if self.password != old_password:
-            conn.close()
-            raise ValueError("Invalid old password.")
-
         cursor.execute('''UPDATE Admin SET password = ? WHERE adminId = ?''', (new_password, self.adminId))
         conn.commit()
         conn.close()
-
-    def update_admin(self,email=None,name=None,old_password=None,new_password=None):
-        if email is not None:
-            self.update_email(email)
-        if name is not None:
-            self.update_name(name)
-        if old_password is not None and new_password is not None:
-            self.update_password(old_password, new_password)
         return True
+    
+    def update_admin(self,email,name,new_password):
+        if self.update_email(email):
+                if self.update_name(name):
+                    if self.update_password(new_password):
+                        return True
+        return False
