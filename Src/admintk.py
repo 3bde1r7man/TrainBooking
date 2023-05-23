@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from Admin import Admin
 from TrainGUI import AddTrain, EditTrain
-from tripView import AddTripView, UpdateTripView
+from tripView import AddTripView, TripsView
 from CustomerGUI import CustomerMain
 class Main:
     def __init__(self):
@@ -273,7 +273,7 @@ class MainMenuWindow:
         add_trip_button = ttk.Button(self.container, text="Add Trip", command= lambda: AddTripView(adminId))
         add_trip_button.grid(row=0, column=1, padx=10, pady=5)
 
-        edit_trip_button = ttk.Button(self.container, text="Edit Trip", command= lambda: UpdateTripView(adminId))
+        edit_trip_button = ttk.Button(self.container, text="Edit Trip", command= lambda: TripsView(adminId))
         edit_trip_button.grid(row=1, column=1, padx=10, pady=5)
 
         edit_info_button = ttk.Button(self.container, text="Edit My Info",command= lambda: EditInfoWindow(self.parent,self.main_app,adminId))
