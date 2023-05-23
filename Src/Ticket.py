@@ -45,11 +45,6 @@ class Ticket:
                     (passenger[0], passenger[1], self.ticketId))
                 conn.commit()
             
-            customer = Customer(self.customerId)
-            cursor.execute(
-                f'INSERT INTO Passenger (name, age, ticketId) VALUES (?, ?, ?)',
-                (customer.name, customer.customerAge(), self.ticketId))
-            conn.commit()
             messagebox.showinfo("Success", "Ticket added successfully")
         else:
             messagebox.showerror('Error', 'No seats available')
