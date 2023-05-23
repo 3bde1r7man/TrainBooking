@@ -1,7 +1,7 @@
 
 CREATE TABLE Customer
 (
-  custmerId INT IDENTITY(1,1) PRIMARY KEY,
+  customerId INT IDENTITY(1,1) PRIMARY KEY,
   password VARCHAR(20) NOT NULL,
   email VARCHAR(20) NOT NULL,
   DOB DATE NOT NULL,
@@ -37,6 +37,7 @@ CREATE TABLE TrainClass
   nSeats INT NOT NULL,
   trainId INT NOT NULL,
   classId INT NOT NULL,
+  avlSeats INT NOT NULL,
   PRIMARY KEY (trainId, classId),
   FOREIGN KEY (trainId) REFERENCES Train(trainId),
   FOREIGN KEY (classId) REFERENCES Class(classId)
@@ -44,7 +45,7 @@ CREATE TABLE TrainClass
 
 CREATE TABLE Customer_phoneNum
 (
-  phoneNum INT NOT NULL,
+  phoneNum VARCHAR(20) NOT NULL,
   custmerId INT NOT NULL,
   PRIMARY KEY (phoneNum, custmerId),
   FOREIGN KEY (custmerId) REFERENCES Customer(custmerId)
