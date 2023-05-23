@@ -5,15 +5,15 @@ from tripView import AddTripView, UpdateTripView
 from CustomerGUI import CustomerMain
 class Main:
     def __init__(self):
-        self.b = tk.Tk()
-        self.b.geometry('1000x600+280+100')
-        self.b.configure(bg="black")
+        self.root = tk.Tk()
+        self.root.geometry('1000x600+280+100')
+        self.root.configure(bg="black")
         self.style = ttk.Style()
         self.style.theme_use('default')
 
     def create_initial_window(self):
-        self.b.title("Choose User Type")
-        label = tk.Label(self.b, text="Choose User Type", fg='white', font=('Hey Comic', 50), background="black")
+        self.root.title("Choose User Type")
+        label = tk.Label(self.root, text="Choose User Type", fg='white', font=('Hey Comic', 50), background="black")
         label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
 
         admin_button = tk.Button(text='Admin', fg='white', bg='red', font=('Liberation Sans bold', 15), command=self.show_admin_window, cursor='hand2')
@@ -22,15 +22,15 @@ class Main:
         customer_button = tk.Button(text='Customer', fg='white', bg='red', font=('Liberation Sans bold', 15), command=self.show_customer_window, cursor='hand2')
         customer_button.place(relx=0.7, rely=0.55, anchor=tk.CENTER, width=250, height=70)
 
-        self.b.mainloop()
+        self.root.mainloop()
 
     def show_admin_window(self):
-        self.b.destroy()  # Destroy the current window
+        self.root.destroy()  # Destroy the current window
         # Create and show the Admin window
         admin_window = AdminMain()
 
     def show_customer_window(self):
-        self.b.destroy()  # Destroy the current window
+        self.root.destroy()  # Destroy the current window
         # Create and show the Customer window
         customer_window = CustomerMain()
         customer_window.Sign()
@@ -74,7 +74,7 @@ class AdminMain:
 
         # Add a header
         header_label = ttk.Label(home_frame,
-                                 text="Welcome to Your App",
+                                 text="Welcome as Administrator",
                                  style="Header.TLabel")
         header_label.pack(pady=20)
 
