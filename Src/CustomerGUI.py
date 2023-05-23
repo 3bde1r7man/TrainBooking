@@ -92,13 +92,7 @@ class CustomerGUI:
         Button1=Button(root,text='Login',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.handle_login(Email.get(),Password.get(),root),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
         root.mainloop()
 
-    def handle_login(self,Email,Password,root):
-        result_variable=StringVar() 
-        result_variable.set(self.data.Sign_in(Email, Password))
-        check = int(result_variable.get())
-        if check==1:
-            root.destroy()
-            self.functions()
+    
     
     def update_name(self,root):
         root.destroy()
@@ -108,13 +102,11 @@ class CustomerGUI:
         style = ttk.Style()
         style.theme_use('default')
         L1=Label(root,text="Update Name",fg='white',font=('Hey Comic',50), background="black").place(relx=0.5, rely=0.1,anchor=tk.CENTER)
-        L6=Label(root,text="Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.4,anchor=tk.CENTER)
-        Email=StringVar()
-        text=Entry(root,textvariable=Email,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.4,anchor=tk.CENTER,height=40,width=550)
-        L6=Label(root,text=" New Name",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.53,anchor=tk.CENTER)
+        
+        L6=Label(root,text=" New Name",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.5,anchor=tk.CENTER)
         Name=StringVar()
-        text=Entry(root,textvariable=Name,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.53,anchor=tk.CENTER,height=40,width=550)
-        Button1=Button(root,text='Update Name',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.data.Upadte_Name(Email.get(),Name.get()),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
+        text=Entry(root,textvariable=Name,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.5,anchor=tk.CENTER,height=40,width=550)
+        Button1=Button(root,text='Update Name',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.handle_UpdateName(Name.get(),root),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
         root.mainloop()    
         
     def update_password(self,root):
@@ -125,13 +117,10 @@ class CustomerGUI:
         style = ttk.Style()
         style.theme_use('default')
         L1=Label(root,text="Update Password",fg='white',font=('Hey Comic',50), background="black").place(relx=0.5, rely=0.1,anchor=tk.CENTER)
-        L6=Label(root,text="Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.4,anchor=tk.CENTER)
-        Email=StringVar()
-        text=Entry(root,textvariable=Email,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.4,anchor=tk.CENTER,height=40,width=550)
-        L6=Label(root,text=" New Passowrd",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.53,anchor=tk.CENTER)
+        L6=Label(root,text=" New Passowrd",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.5,anchor=tk.CENTER)
         Passowrd=StringVar()
-        text=Entry(root,textvariable=Passowrd,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.53,anchor=tk.CENTER,height=40,width=550)
-        Button1=Button(root,text='Update Password',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.data.update_password(Email.get(),Passowrd.get()),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
+        text=Entry(root,textvariable=Passowrd,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.5,anchor=tk.CENTER,height=40,width=550)
+        Button1=Button(root,text='Update Password',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.handle_UpdatePass(Passowrd.get(),root),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
         root.mainloop()    
     
     def update_phoneNum(self,root):
@@ -142,13 +131,10 @@ class CustomerGUI:
         style = ttk.Style()
         style.theme_use('default')
         L1=Label(root,text="Update Phone",fg='white',font=('Hey Comic',50), background="black").place(relx=0.5, rely=0.1,anchor=tk.CENTER)
-        L6=Label(root,text="Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.4,anchor=tk.CENTER)
-        Email=StringVar()
-        text=Entry(root,textvariable=Email,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.4,anchor=tk.CENTER,height=40,width=550)
-        L6=Label(root,text=" New Phone",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.53,anchor=tk.CENTER)
+        L6=Label(root,text=" New Phone",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.5,anchor=tk.CENTER)
         Phone=StringVar()
-        text=Entry(root,textvariable=Phone,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.53,anchor=tk.CENTER,height=40,width=550)
-        Button1=Button(root,text='Update Phone',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.data.update_phoneNum(Email.get(),Phone.get()),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
+        text=Entry(root,textvariable=Phone,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.5,anchor=tk.CENTER,height=40,width=550)
+        Button1=Button(root,text='Update Phone',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.handle_UpdatePhone(Phone.get(),root),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
         root.mainloop()       
 
     def update_email(self,root):
@@ -159,14 +145,52 @@ class CustomerGUI:
         style = ttk.Style()
         style.theme_use('default')
         L1=Label(root,text="Update Email",fg='white',font=('Hey Comic',50), background="black").place(relx=0.5, rely=0.1,anchor=tk.CENTER)
-        L6=Label(root,text="Old Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.4,anchor=tk.CENTER)
-        Email=StringVar()
-        text=Entry(root,textvariable=Email,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.4,anchor=tk.CENTER,height=40,width=550)
-        L6=Label(root,text=" New Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.53,anchor=tk.CENTER)
+        L6=Label(root,text=" New Email",fg='white',font=('Liberation Sans bold',20), background="black").place(relx=0.1, rely=0.5,anchor=tk.CENTER)
         NEmail=StringVar()
-        text=Entry(root,textvariable=NEmail,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.53,anchor=tk.CENTER,height=40,width=550)
-        Button1=Button(root,text='Update Email',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.data.update_email(Email.get(),NEmail.get()),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
+        text=Entry(root,textvariable=NEmail,font=('Liberation Sans', 12, 'bold')).place(relx=0.5, rely=0.5,anchor=tk.CENTER,height=40,width=550)
+        Button1=Button(root,text='Update Email',fg='white',bg='red',font=('Liberation Sans bold',20),command=lambda:self.handle_UpdateEmail(NEmail.get(),root),cursor='hand2').place(relx=0.5, rely=0.7,anchor=tk.CENTER,width=250,height=60)
         root.mainloop()
+    
+    def handle_login(self,Email,Password,root):
+        result_variable=StringVar() 
+        result_variable.set(self.data.Sign_in(Email, Password))
+        check = int(result_variable.get())
+        if check==1:
+            root.destroy()
+            self.functions()
+     
+    def handle_UpdateName(self,Name,root):
+        result_variable=StringVar() 
+        result_variable.set(self.data.Update_Name(Name))
+        check = int(result_variable.get())
+        if check==1:
+            root.destroy()
+            self.functions()
+    
+    def handle_UpdatePass(self,Password,root):
+        result_variable=StringVar() 
+        result_variable.set(self.data.update_password(Password))
+        check = int(result_variable.get())
+        if check==1:
+            root.destroy()
+            self.functions()
+    
+    def handle_UpdatePhone(self,Phone,root):
+        result_variable=StringVar() 
+        result_variable.set(self.data.update_phoneNum(Phone))
+        check = int(result_variable.get())
+        if check==1:
+            root.destroy()
+            self.functions()
+            
+    def handle_UpdateEmail(self,Email,root):
+        result_variable=StringVar() 
+        result_variable.set(self.data.update_email(Email))
+        check = int(result_variable.get())
+        if check==1:
+            root.destroy()
+            self.functions()   
+                                          
         
     
     def Book_trip(self):
@@ -175,11 +199,17 @@ class CustomerGUI:
     def Cancel_trip(self):
         CancelTrip(customerId= self.data.customerId)
 
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
 class BookTrip:
     def __init__(self, customerId):
         self.customerId = customerId        
         self.root = tk.Tk()
         self.root.title("Book Trips")
+        self.root.configure(bg="black")  # Set window background color to black
+
         self.passengers = []  
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
@@ -187,30 +217,31 @@ class BookTrip:
         data = cursor.fetchall()
         counter = 1
         for row in data:
-            self.trip_num = tk.Label(self.root, text=f"Trip: {counter}")
+            self.trip_num = tk.Label(self.root, text=f"Trip: {counter}", bg="black", fg="white")  # Set label background color to black and text color to white
             self.trip_num.pack()
             counter += 1
 
-            self.lbl_trip_src = tk.Label(self.root, text=f"Source: {row[0]}")
+            self.lbl_trip_src = tk.Label(self.root, text=f"Source: {row[0]}", bg="black", fg="white")
             self.lbl_trip_src.pack()
 
-            self.lbl_trip_dest = tk.Label(self.root, text=f"Destination: {row[1]}")
+            self.lbl_trip_dest = tk.Label(self.root, text=f"Destination: {row[1]}", bg="black", fg="white")
             self.lbl_trip_dest.pack()
 
-            self.lbl_trip_departs = tk.Label(self.root, text=f"Departs: {row[2]}")
+            self.lbl_trip_departs = tk.Label(self.root, text=f"Departs: {row[2]}", bg="black", fg="white")
             self.lbl_trip_departs.pack()
 
-            self.lbl_trip_arrives = tk.Label(self.root, text=f"Arrives: {row[3]}")
+            self.lbl_trip_arrives = tk.Label(self.root, text=f"Arrives: {row[3]}", bg="black", fg="white")
             self.lbl_trip_arrives.pack()
             
-            self.lbl_trip_price = tk.Label(self.root, text=f"Price:{row[4]}")
+            self.lbl_trip_price = tk.Label(self.root, text=f"Price:{row[4]}", bg="black", fg="white")
             self.lbl_trip_price.pack()
 
-            self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
+            self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}", bg="black", fg="white")
             self.lbl_trip_train.pack()
 
             update_trip_btn = tk.Button(self.root, text="Book Trip", command=lambda: self.bookTrip(row[5], row[6]))
             update_trip_btn.pack()
+            update_trip_btn.configure(bg="red", fg="white")  # Set button background color to red and text color to white
 
         self.root.mainloop()
     
@@ -263,48 +294,54 @@ class BookTrip:
                 
         messagebox.showerror("Error", "Your selected index does not exist")
         return -1
-        
-    
+
+
 class CancelTrip:
     def __init__(self, customerId):
-        self.customer = Customer(customerId= customerId)
+        self.customer = Customer(customerId=customerId)
 
         self.root = tk.Tk()
         self.root.title("Cancel booking")
+        self.root.configure(bg="black")  # Set window background color to black
+
         Trip = self.customer.View_trip()
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
         if Trip[0] is not None:
-            cursor.execute(f'SELECT src, dest, departs, arrives, price, trainId, tripId FROM Trip WHere tripId = {Trip[0]}')
+            cursor.execute(f'SELECT src, dest, departs, arrives, price, trainId, tripId FROM Trip WHERE tripId = {Trip[0]}')
             data = cursor.fetchall()
             counter = 1
             for row in data:
-                self.trip_num = tk.Label(self.root, text=f"Trip: {counter}")
+                self.trip_num = tk.Label(self.root, text=f"Trip: {counter}", bg="black", fg="white")
                 self.trip_num.pack()
                 counter += 1
 
-                self.lbl_trip_src = tk.Label(self.root, text=f"Source: {row[0]}")
+                self.lbl_trip_src = tk.Label(self.root, text=f"Source: {row[0]}", bg="black", fg="white")
                 self.lbl_trip_src.pack()
 
-                self.lbl_trip_dest = tk.Label(self.root, text=f"Destination: {row[1]}")
+                self.lbl_trip_dest = tk.Label(self.root, text=f"Destination: {row[1]}", bg="black", fg="white")
                 self.lbl_trip_dest.pack()
 
-                self.lbl_trip_departs = tk.Label(self.root, text=f"Departs: {row[2]}")
+                self.lbl_trip_departs = tk.Label(self.root, text=f"Departs: {row[2]}", bg="black", fg="white")
                 self.lbl_trip_departs.pack()
 
-                self.lbl_trip_arrives = tk.Label(self.root, text=f"Arrives: {row[3]}")
+                self.lbl_trip_arrives = tk.Label(self.root, text=f"Arrives: {row[3]}", bg="black", fg="white")
                 self.lbl_trip_arrives.pack()
                 
-                self.lbl_trip_price = tk.Label(self.root, text=f"Price:{row[4]}")
+                self.lbl_trip_price = tk.Label(self.root, text=f"Price:{row[4]}", bg="black", fg="white")
                 self.lbl_trip_price.pack()
 
-                self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
+                self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}", bg="black", fg="white")
                 self.lbl_trip_train.pack()
+
                 ticket = Ticket()
                 update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: ticket.deleteTicket(customerId, row[6], self.customer.Cancel_trip(row[6])))
                 update_trip_btn.pack()
+                update_trip_btn.configure(bg="red", fg="white")
+
         else:
             messagebox.showerror("Error", "You didn't book any trip")
 
         self.root.mainloop()
 
+    
