@@ -1,4 +1,6 @@
 
-from admintk import MainApp
+from admintk import Main
 
-main_app = MainApp()
+if __name__ == "__main__":
+    main = Main()
+    main.create_initial_window()
