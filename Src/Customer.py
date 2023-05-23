@@ -27,9 +27,8 @@ class Customer:
                 self.phone.append(row[0])
     
     def Sign_up(self, username, birthdate, phonenum, email, password):
-
         self.name = username
-        self.DOB = datetime.datetime.strptime(birthdate, "%d-%m-%y")
+        self.DOB = datetime.datetime.strptime(birthdate, "%d-%m-%Y")
         self.phone = phonenum
         self.email = email
         self.password = password
@@ -42,9 +41,9 @@ class Customer:
             cursor.execute(f''' INSERT into Customer (name, DOB, email, password) values ("{self.name}", "{self.DOB}", "{self.email}", "{self.password}") ''')
             conn.commit()
             cursor.execute(f''' SELECT customerId FROM Customer WHERE email = "{self.email}" ''')
-            self.customerId = cursor.fetchone()[0]
+            self.customerId = cursor.fetchone()
             if self.customerId == None:
-                messagebox.showerror("Error", "email is not exist")
+                messagebox.showerror("Error", "email does not exist")
             else:
                 messagebox.showinfo("success", "Account created successfully")
                 cursor.execute(f'''INSERT INTO Customer_PhoneNum (customerId, phoneNum) values ("{self.customerId[0]}","{self.phone}") ''')

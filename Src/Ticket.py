@@ -77,20 +77,11 @@ class Ticket:
             age = row[1]
             if age < 10:
                 price = 0.5 * normalPrice
-            elif age < 60:
+            elif age > 60:
                 price = .5 * normalPrice
             else:
                 price = normalPrice
             self.totalPrice += price
-        customer = Customer(self.customerId)
-        age = customer.customerAge()
-        if age < 10:
-            price = 0.5 * normalPrice
-        elif age < 60:
-            price = .5 * normalPrice
-        else:
-            price = normalPrice
-        self.totalPrice += price
         return self.totalPrice
 
     def calculatenSeats(self):

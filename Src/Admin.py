@@ -1,6 +1,7 @@
 import sqlite3
 from Train import Train
 from Trip import Trip
+import datetime
 
 class Admin:
     def __init__(self, admin_id=None):
@@ -102,11 +103,17 @@ class Admin:
         trip = Trip()
         trip.src = src
         trip.dest = dest
-        trip.departs = departs
-        trip.arrives = arrives
+        if self.checkDate(departs) and self.checkDate(arrives) and self.checkTwoDate(departs, arrives):
+            trip.departs = departs
+            trip.arrives = arrives
+        else:
+            return False
+                
         trip.price = price
         trip.trainId = trainID
         trip.add_trip_to_database(self.adminId)
+
+        return True
 
     def update_trip(self, trip_id, src=None, dest=None, departs=None, arrives=None, price=None, trainId=None):
         trip = Trip(trip_id)
@@ -115,14 +122,29 @@ class Admin:
         if dest:
             trip.dest = dest
         if departs:
-            trip.departs = departs
+            if self.checkDate(departs):
+                trip.departs = departs
+            else:
+                return False
         if arrives:
-            trip.arrives = arrives
+            if self.checkDate(arrives):
+                trip.arrives = arrives
+            else:
+                return False
+            
+        if departs or arrives:
+            if not self.checkTwoDate(trip.departs, trip.arrives):
+                return False
+            
         if price:
             trip.price = price
         if trainId:
             trip.trainId = trainId
+
+        
         trip.update_trip_to_database()
+
+        return True
 
     def update_name(self, name):
         conn = sqlite3.connect('db.sqlite3')
@@ -154,3 +176,19 @@ class Admin:
                     if self.update_password(new_password):
                         return True
         return False
+    
+    def checkDate(self, dateStr):
+        today = datetime.date.today()
+        try:
+            date = datetime.datetime.strptime(dateStr, "%d-%m-%Y")
+        except:
+            return False
+        return  ((today.year, today.month, today.day) < (date.year, date.month, date.day)) 
+    
+    def checkTwoDate(self, departsStr, arrivesStr):
+        try:
+            departs = datetime.datetime.strptime(departsStr, "%d-%m-%Y")
+            arrives = datetime.datetime.strptime(arrivesStr, "%d-%m-%Y")  
+        except:
+            return False
+        return  ((departs.year, departs.month, departs.day) < (arrives.year, arrives.month, arrives.day)) 
