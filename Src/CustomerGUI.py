@@ -284,8 +284,8 @@ class CancelTrip:
 
                 self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
                 self.lbl_trip_train.pack()
-
-                update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: Ticket.deleteTicket(customerId, row[6], self.customer.Cancel_trip(row[6])))
+                ticket = Ticket()
+                update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: ticket.deleteTicket(customerId, row[6], self.customer.Cancel_trip(row[6])))
                 update_trip_btn.pack()
         else:
             messagebox.showerror("Error", "You didn't book any trip")
