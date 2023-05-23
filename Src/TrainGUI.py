@@ -9,61 +9,70 @@ def enter_seats(class_name):
     seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
     return seats
 
-
 class AddTrain:
     def __init__(self, parent, adminId):
         self.admin = Admin(adminId)
         self.root = tk.Toplevel(parent)
         self.root.title("Add Train")
-        self.root.geometry("500x500")
-        self.name_label = tk.Label(self.root, text="Name:")
-        self.name_label.pack()
-        self.name_entry = tk.Entry(self.root)
-        self.name_entry.pack()
-        
-        self.details_label = tk.Label(self.root, text="Details:")
-        self.details_label.pack()
-        self.details_entry = tk.Entry(self.root)
-        self.details_entry.pack()
-        
-        self.class_label = tk.Label(self.root, text="Classes:")
-        self.class_label.pack()
-        self.class_listbox = tk.Listbox(self.root, selectmode=tk.MULTIPLE)
-        self.class_listbox.pack()
+        self.root.geometry('1000x600+280+100')
+        self.root.configure(bg="black")
 
-        self.add_train_button = tk.Button(self.root, text="Add Train", command=self.add_train)
-        self.add_train_button.pack()
+        self.name_label = tk.Label(self.root, text="Name:", bg="black", fg="white")
+        self.name_label.pack(pady=10)
+
+        self.name_entry = tk.Entry(self.root)
+        self.name_entry.pack(pady=5)
+
+        self.details_label = tk.Label(self.root, text="Details:", bg="black", fg="white")
+        self.details_label.pack(pady=10)
+
+        self.details_entry = tk.Entry(self.root)
+        self.details_entry.pack(pady=5)
+
+        self.class_label = tk.Label(self.root, text="Classes:", bg="black", fg="white")
+        self.class_label.pack(pady=10)
+
+        self.class_listbox = tk.Listbox(self.root, selectmode=tk.MULTIPLE, bg="black", fg="white")
+        self.class_listbox.pack(pady=5)
+
+        self.add_train_button = tk.Button(self.root, text="Add Train", bg="red", fg="white", command=self.add_train)
+        self.add_train_button.pack(pady=10)
+
         self.populate_class_list()
         self.root.mainloop()
-    
+
     def populate_class_list(self):
         classes = Class()
         classes = classes.getClasses()
         for class_data in classes:
             self.class_listbox.insert(tk.END, f"{class_data[1]} (${class_data[2]})")
-    
+
     def add_train(self):
         name = self.name_entry.get()
         details = self.details_entry.get()
         selected_indices = self.class_listbox.curselection()
-        
+
         if not name or not details or not selected_indices:
             messagebox.showerror("Error", "Please enter all required information")
             return
+
         classes = Class()
         classes = classes.getClasses()
         selected_classes = [classes[i] for i in selected_indices]
-        
+
         classes = {}
+
         for class_data in selected_classes:
             class_id = class_data[0]
             class_name = class_data[1]
             class_price = class_data[2]
-            
+
             n_seats = enter_seats(class_name)
-            
+
             classes[class_id] = [class_name, class_price, n_seats]
+
         success = self.admin.add_train(name, details, classes)
+
         if success:
             messagebox.showinfo("Success", "Train added successfully")
             self.name_entry.delete(0, tk.END)
@@ -160,6 +169,6 @@ class EditTrain:
                 
         messagebox.showerror("Error", "Your selected index does not exist")
         return -1
-    
+
 
 

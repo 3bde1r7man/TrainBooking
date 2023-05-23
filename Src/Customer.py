@@ -17,7 +17,7 @@ class Customer:
             data = cursor.fetchone()
             self.name = data[0]
             self.password = data[1]
-            self.DOB = datetime.datetime.strptime(data[2], "%d-%m-%Y")
+            self.DOB = datetime.datetime.strptime(data[2], "%Y-%m-%d")
             self.email = data[3]
 
             cursor.execute(f"SELECT phoneNum FROM Customer_phoneNum WHERE customerId = {customerId}")
@@ -28,7 +28,7 @@ class Customer:
     
     def Sign_up(self, username, birthdate, phonenum, email, password):
         self.name = username
-        self.DOB = datetime.datetime.strptime(birthdate, "%d-%m-%Y")
+        self.DOB = datetime.datetime.strptime(birthdate, "%d-%m-%Y").date()
         self.phone = phonenum
         self.email = email
         self.password = password
@@ -83,69 +83,38 @@ class Customer:
 
             conn.close()
             return False
-    def Upadte_Name(self,Email,Name):
+    def Update_Name(self,Name):
             conn = sqlite3.connect('db.sqlite3')
             cursor = conn.cursor()
-            self.email =Email
-            cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
-            if cursor.fetchone() == None:
-                messagebox.showerror("Error","Name updated successfully")
-                conn.close()
-                return False
-            else:
-                self.name =Name
-                cursor.execute(f''' UPDATE Customer SET name="{self.name}" WHERE email = "{self.email}" ''')
-                messagebox.showinfo("Success","Name updated successfully")
-                conn.commit()
-                conn.close()
-                return True
-    def update_password(self,Email,Password):
-            conn = sqlite3.connect('db.sqlite3')
-            cursor = conn.cursor()
-            self.email =Email
-            cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
-            if cursor.fetchone() == None:
-                messagebox.showerror("Error","Email not found please sign up first")
-                conn.close()
-                return False
-            else:
-                self.password =Password
-                cursor.execute(f''' UPDATE Customer SET password ="{self.password}" WHERE email = "{self.email}" ''')
-                messagebox.showinfo("Success","Password updated successfully")
-                conn.commit()
-                conn.close()
-                return True
-    def update_phoneNum(self,Email,Phone):
-            conn = sqlite3.connect('db.sqlite3')
-            cursor = conn.cursor()
-            self.email =Email
-            cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
-            if cursor.fetchone() == None:
-                messagebox.showinfo("Error","Email not found please sign up first")
-                conn.close()
-                return False
-            else:
-                self.phone =Phone
-                cursor.execute(f''' SELECT customerID FROM Customer WHERE email = "{self.email}" ''')
-                customerid = cursor.fetchone()
-                cursor.execute(f''' UPDATE Customer_phoneNum SET phoneNum ="{self.phone}" WHERE customerId = "{customerid[0]}" ''')
-                messagebox.showinfo("Success","Phone updated successfully")
-                conn.commit()
-                conn.close()
-                return True  
-    def update_email(self,Email,NEmail):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        self.email =Email
-        cursor.execute(f''' SELECT email FROM Customer WHERE email = "{self.email}" ''')
-        if cursor.fetchone() == None:
-            messagebox.showerror("Erroe","Email not found please sign up first")
+            self.name =Name
+            cursor.execute(f''' UPDATE Customer SET name="{self.name}" WHERE customerId = "{self.customerId}" ''')
+            messagebox.showinfo("Success","Name updated successfully")
+            conn.commit()
             conn.close()
-            return False
-        else:
-            old_email = self.email
+            return True
+    def update_password(self,Password):
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            self.password =Password
+            cursor.execute(f''' UPDATE Customer SET password ="{self.password}" WHERE customerId = "{self.customerId}" ''')
+            messagebox.showinfo("Success","Password updated successfully")
+            conn.commit()
+            conn.close()
+            return True
+    def update_phoneNum(self,Phone):
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
+            self.phone = Phone
+            cursor.execute(f''' UPDATE Customer_phoneNum SET phoneNum ="{self.phone}" WHERE customerId = "{self.customerId}" ''')
+            messagebox.showinfo("Success","Phone updated successfully")
+            conn.commit()
+            conn.close()
+            return True  
+    def update_email(self,NEmail):
+            conn = sqlite3.connect('db.sqlite3')
+            cursor = conn.cursor()
             self.email =NEmail
-            cursor.execute(f''' UPDATE Customer SET email ="{self.email}" WHERE email = "{old_email}" ''')
+            cursor.execute(f''' UPDATE Customer SET email ="{self.email}" WHERE customerId = "{self.customerId}" ''')
             messagebox.showinfo("Success","Email updated successfully")
             conn.commit()
             conn.close()
