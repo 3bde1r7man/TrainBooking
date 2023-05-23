@@ -1,10 +1,40 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Admin import Admin
-from tripView import AddTripView, UpdateTripView, TripsView
-from TrainGUI import AddTrain, EditTrain
+from tripView import AddTripView, UpdateTripView
+from CustomerGUI import CustomerMain
+class Main:
+    def __init__(self):
+        self.b = tk.Tk()
+        self.b.geometry('1000x600+280+100')
+        self.b.configure(bg="black")
+        self.style = ttk.Style()
+        self.style.theme_use('default')
 
-class MainApp:
+    def create_initial_window(self):
+        self.b.title("Choose User Type")
+        label = tk.Label(self.b, text="Choose User Type", fg='white', font=('Hey Comic', 50), background="black")
+        label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+
+        admin_button = tk.Button(text='Admin', fg='white', bg='red', font=('Liberation Sans bold', 15), command=self.show_admin_window, cursor='hand2')
+        admin_button.place(relx=0.3, rely=0.55, anchor=tk.CENTER, width=250, height=70)
+
+        customer_button = tk.Button(text='Customer', fg='white', bg='red', font=('Liberation Sans bold', 15), command=self.show_customer_window, cursor='hand2')
+        customer_button.place(relx=0.7, rely=0.55, anchor=tk.CENTER, width=250, height=70)
+
+        self.b.mainloop()
+
+    def show_admin_window(self):
+        self.b.destroy()  # Destroy the current window
+        # Create and show the Admin window
+        admin_window = AdminMain()
+
+    def show_customer_window(self):
+        self.b.destroy()  # Destroy the current window
+        # Create and show the Customer window
+        customer_window = CustomerMain()
+        customer_window.Sign()
+class AdminMain:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Main App")
@@ -233,20 +263,21 @@ class MainMenuWindow:
         self.container = ttk.Frame(self.main_menu_window)
         self.container.pack(padx=10, pady=10)
 
-        add_train_button = ttk.Button(self.container, text="Add Train", command= lambda : AddTrain(self.parent, adminId))
+        add_train_button = ttk.Button(self.container, text="Add Train")
         add_train_button.grid(row=0, column=0, padx=10, pady=5)
 
-        edit_train_button = ttk.Button(self.container, text="Edit Train", command= lambda : EditTrain(adminId))
+        edit_train_button = ttk.Button(self.container, text="Edit Train")
         edit_train_button.grid(row=1, column=0, padx=10, pady=5)
 
         add_trip_button = ttk.Button(self.container, text="Add Trip", command= lambda: AddTripView(adminId))
         add_trip_button.grid(row=0, column=1, padx=10, pady=5)
 
-        edit_trip_button = ttk.Button(self.container, text="Edit Trip", command= lambda:TripsView(adminId))
+        edit_trip_button = ttk.Button(self.container, text="Edit Trip", command= lambda: UpdateTripView(adminId))
         edit_trip_button.grid(row=1, column=1, padx=10, pady=5)
 
         edit_info_button = ttk.Button(self.container, text="Edit My Info",command= lambda: EditInfoWindow(self.parent,self.main_app,adminId))
         edit_info_button.grid(row=2, column=0, columnspan=2, pady=10)
 
 if __name__ == "__main__":
-    main_app = MainApp()
+    main = Main()
+    main.create_initial_window()

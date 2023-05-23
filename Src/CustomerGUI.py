@@ -6,7 +6,7 @@ import tkinter as tk
 from Customer import Customer
 from Ticket import Ticket
 
-class Main:
+class CustomerMain:
     def __init__(self):
         self.customer = CustomerGUI()
         self.b=tk.Tk()
@@ -292,7 +292,3 @@ class CancelTrip:
 
         self.root.mainloop()
 
-
-test = Main()
-
-test.Sign()
