@@ -70,11 +70,11 @@ class Train():
         conn.close()
         return True
 
-    def updateAvlSeats(self, whichClass, boostSeats):
+    def updateAvlSeats(self, whichClass, bookedSeats):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
-        query = 'UPDATE TrainClass SET avlSeats = avlSeats - ? WHERE trainId =? AND classId =?'
-        values = (boostSeats, self.trainId, whichClass)
+        query = 'UPDATE TrainClass SET avlSeats = avlSeats - ? WHERE trainId = ? AND classId = ?'
+        values = (bookedSeats, self.trainId, whichClass)
         cursor.execute(query, values)
         conn.commit()
         conn.close()

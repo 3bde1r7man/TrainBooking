@@ -30,8 +30,8 @@ class Ticket:
                 passenger = [row[0], row[1]]
                 self.passengers.append(passenger)
 
-    def addTicket(self):
-        if (self.calculatenSeats()):
+    def addTicket(self, isOk):
+        if (self.calculatenSeats() and isOk):
             cursor.execute(
                 f'INSERT INTO Ticket (bookedSeats, customerId, tripId, classId) VALUES (?, ?, ?, ?)',
                 (self.bookedSeats, self.customerId, self.tripId, self.classId))
@@ -56,14 +56,16 @@ class Ticket:
 
 
 
-    def deleteTicket(self):
-        cursor.execute(f'DELETE FROM Ticket WHERE TicketId = {self.ticketId}')
-        conn.commit()
+    def deleteTicket(self, customerId, tripId, isOk):
+        if isOk:
+            cursor.execute('SELECT ticketId FROM Ticket WHERE customerId = ? AND tripId = ?', (customerId, tripId))
+            self.ticketId = cursor.fetchone()[0]
+            cursor.execute(f'DELETE FROM Ticket WHERE customerId = {self.ticketId}')
+            conn.commit()
 
-        cursor.execute(f'DELETE FROM Passenger WHERE ticketId = {self.ticketId}')
-        conn.commit()
-
-        messagebox.showinfo("Success", "Ticket deleted successfully")
+            cursor.execute(f'DELETE FROM Passenger WHERE ticketId = {self.ticketId}')
+            conn.commit()
+            messagebox.showinfo("Success", "Ticket deleted successfully")
 
     def calculatePrice(self):
         classPrice = self.classPrice()

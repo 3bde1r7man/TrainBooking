@@ -232,7 +232,7 @@ class BookTrip:
         price_label = tk.Label(self.root, text=f"Toatal Price: $ {ticket.calculatePrice()}")
         price_label.pack()
         customer = Customer(customerId= self.customerId) 
-        book_Trip_btn = tk.Button(self.root, text="Confirm", command=lambda: (ticket.addTicket(), customer.Booktrip(tripId= tripId)))
+        book_Trip_btn = tk.Button(self.root, text="Confirm", command=lambda: ticket.addTicket(customer.Booktrip(tripId= tripId)))
         book_Trip_btn.pack()
 
 
@@ -285,7 +285,7 @@ class CancelTrip:
                 self.lbl_trip_train = tk.Label(self.root, text=f"Train:{row[5]}")
                 self.lbl_trip_train.pack()
 
-                update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: self.customer.Cancel_trip(row[6]))
+                update_trip_btn = tk.Button(self.root, text="Cancel Trip", command=lambda: Ticket.deleteTicket(customerId, row[6], self.customer.Cancel_trip(row[6])))
                 update_trip_btn.pack()
         else:
             messagebox.showerror("Error", "You didn't book any trip")

@@ -159,9 +159,11 @@ class Customer:
             cursor.execute(f''' INSERT INTO TripCustomer (customerId, tripId) VALUES(?, ?)''' , (self.customerId, tripId))
             conn.commit()
             messagebox.showinfo("Success","Booked successfully")
+            return True
         else:
             messagebox.showinfo("ERROR","You aleardy booked this Trip")
-            
+            return False
+
     def Cancel_trip(self, Tripid):
         conn = sqlite3.connect('db.sqlite3')
         cursor = conn.cursor()
