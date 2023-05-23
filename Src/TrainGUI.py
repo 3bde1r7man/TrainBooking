@@ -76,12 +76,22 @@ class EditTrain:
     def __init__(self, adminId):
         self.admin = Admin(adminId)
         selected_train_index = self.select_train()
-        if selected_train_index is None:
+        while selected_train_index == -1:
+            selected_train_index = self.select_train()
+
+        if selected_train_index == None:
             return
 
         self.train = Train(selected_train_index)
 
         edit_choice = self.choose_edit_option()
+        
+        if edit_choice == None:
+            return
+
+        while edit_choice != 1 and edit_choice != 2 and edit_choice != None:
+            messagebox.showerror("Error", "Your selected index does not exist")
+            edit_choice = self.choose_edit_option()
 
         if edit_choice == 1:
             self.edit_train_details()
@@ -97,12 +107,16 @@ class EditTrain:
 
         train_names = [f"{row[0]} - {row[1]}" for row in rows]
         prompt = "\n".join(train_names)
-        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
-        
-        if selected_index is None:
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1,)
+        if selected_index == None:
             return None
-
-        return selected_index
+        
+        for ids in rows:
+            if selected_index == int(ids[0]):
+                return selected_index
+                
+        messagebox.showerror("Error", "Your selected index does not exist")
+        return -1
 
     def choose_edit_option(self):
         return simpledialog.askinteger("Edit Train", "What would you like to edit?\n\n1. Train Details\n2. Train Classes")
@@ -121,7 +135,10 @@ class EditTrain:
 
     def edit_train_classes(self):
         selected_class_index = self.select_train_class()
-        if selected_class_index is None:
+        while selected_class_index == -1:
+            selected_class_index = self.select_train_class()
+        
+        if selected_class_index == None:
             return
 
         new_seats = enter_seats(self.train.classes[selected_class_index][0])
@@ -134,12 +151,15 @@ class EditTrain:
     def select_train_class(self):
         class_names = [f"{class_id} - {self.train.classes[class_id][0]} Number of Seats: {self.train.classes[class_id][2]}" for class_id in self.train.classes]
         prompt = "\n".join(class_names)
-        selected_index = simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1, maxvalue=len(class_names))
-        if selected_index is None:
+        selected_index = simpledialog.askinteger("Select Train Class", f"Select a class to edit:\n{prompt}", minvalue=1,)
+        if selected_index == None:
             return None
-
-        return selected_index
-    
+        for ids in self.train.classes:
+            if selected_index == int(ids):
+                return selected_index
+                
+        messagebox.showerror("Error", "Your selected index does not exist")
+        return -1
     
 
 

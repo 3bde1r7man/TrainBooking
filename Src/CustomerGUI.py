@@ -217,19 +217,27 @@ class BookTrip:
     def bookTrip(self, trainId, tripId ):
         ticket = Ticket(customerId = self.customerId)
         bookSeats = simpledialog.askinteger("book Seats", f"enter Seats:\n", minvalue=1)
+        if bookSeats == None:
+            return
 
         for i in range(0, bookSeats):
-            name = simpledialog.askstring("Passenger name", f"Enter Passenger Name:\n")
+            name = simpledialog.askstring("Passenger name", f"Enter Passenger Name:\n",)
             age = simpledialog.askinteger("Passenger Age", f"enter Passenger Age for Passenger {name}:\n")
             passenger = [name, age]
             self.passengers.append(passenger)
         
         selected_class = self.select_class(trainId)
+        while selected_class == -1:
+              selected_class = self.select_class(trainId)
+
+        if selected_class == None:
+            return
+        
         ticket.bookedSeats = bookSeats
         ticket.passengers = self.passengers
         ticket.classId = selected_class
         ticket.tripId = tripId
-        price_label = tk.Label(self.root, text=f"Toatal Price: $ {ticket.calculatePrice()}")
+        price_label = tk.Label(self.root, text=f"Total Price: $ {ticket.calculatePrice()}")
         price_label.pack()
         customer = Customer(customerId= self.customerId) 
         book_Trip_btn = tk.Button(self.root, text="Confirm", command=lambda: ticket.addTicket(customer.Booktrip(tripId= tripId)))
@@ -243,11 +251,19 @@ class BookTrip:
         classes = cursor.fetchall()
         class_names = [f"{row[0]} - {row[1]}" for row in classes]
         prompt = "\n".join(class_names)
-        selected_index = simpledialog.askinteger("Select Class", f"Select a Class:\n{prompt}", minvalue=1, maxvalue=len(class_names))
+        selected_index = simpledialog.askinteger("Select Class", f"Select a Class:\n{prompt}", minvalue=1)
         
-        if selected_index is None:
+        if selected_index == None:
             return None
-        return selected_index
+        
+        for ids in classes:
+            if selected_index == int(ids[0]):
+                return selected_index
+                
+                
+        messagebox.showerror("Error", "Your selected index does not exist")
+        return -1
+        
     
 class CancelTrip:
     def __init__(self, customerId):

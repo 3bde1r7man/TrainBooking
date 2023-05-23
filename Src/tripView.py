@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 from Admin import Admin
 import sqlite3
 
@@ -82,15 +82,20 @@ class AddTripView:
 
         self.trip_train = self.select_train()
 
+        while self.trip_train == -1:
+            self.trip_train = self.select_train()
+
+        if self.trip_train == None:
+            return
+
         add_trip_btn = tk.Button(self.root, text="Add Trip", command=lambda: self.addTrip())
         add_trip_btn.pack()
 
         self.root.mainloop()
 
     def addTrip(self):
-        self.admin.add_trip(
-            self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)
-        )
+        if not self.admin.add_trip(self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)):
+            messagebox.showerror("Error", "The Entered Dates are not vaild")
         
     def select_train(self):
         conn = sqlite3.connect('db.sqlite3')
@@ -101,12 +106,17 @@ class AddTripView:
 
         train_names = [f"{row[0]} - {row[1]}" for row in rows]
         prompt = "\n".join(train_names)
-        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1,)
         
-        if selected_index is None:
+        if selected_index == None:
             return None
-
-        return selected_index
+        
+        for ids in rows:
+            if selected_index == int(ids[0]):
+                return selected_index
+                
+        messagebox.showerror("Error", "Your selected index does not exist")
+        return -1
 
 class UpdateTripView:
     def __init__(self, adminId, tripId):
@@ -147,15 +157,21 @@ class UpdateTripView:
 
         self.trip_train = self.select_train()
 
+        while self.trip_train == -1:
+            self.trip_train = self.select_train()
+
+        if self.trip_train == None:
+            return
+
         update_trip_btn = tk.Button(self.root, text="Update Trip", command=lambda: self.updateTrip())
         update_trip_btn.pack()
 
         self.root.mainloop()
 
     def updateTrip(self):
-        self.admin.update_trip(
-            self.trip_id, self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)
-        )
+        if not self.admin.update_trip(self.trip_id, self.trip_src.get(), self.trip_dest.get(), self.trip_departs.get(), self.trip_arrives.get(), self.trip_price.get(), str(self.trip_train)):
+            messagebox.showerror("Error", "The Entered Dates are not vaild")
+            
 
     def select_train(self):
         conn = sqlite3.connect('db.sqlite3')
@@ -166,10 +182,15 @@ class UpdateTripView:
 
         train_names = [f"{row[0]} - {row[1]}" for row in rows]
         prompt = "\n".join(train_names)
-        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1, maxvalue=len(train_names))
-        
-        if selected_index is None:
-            return None
+        selected_index = simpledialog.askinteger("Select Train", f"Select a train:\n{prompt}", minvalue=1,)
 
-        return selected_index
+        if selected_index == None:
+            return None
+        
+        for ids in rows:
+            if selected_index == int(ids[0]):
+                return selected_index
+                
+        messagebox.showerror("Error", "Your selected index does not exist")
+        return -1
         
