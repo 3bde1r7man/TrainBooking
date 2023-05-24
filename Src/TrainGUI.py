@@ -5,8 +5,8 @@ from Train import Train
 from Class import Class
 from Admin import Admin
 
-def enter_seats(class_name):
-    seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}")
+def enter_seats(class_name, root):
+    seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}",parent=root)
     return seats
 
 class AddTrain:
@@ -67,7 +67,7 @@ class AddTrain:
             class_name = class_data[1]
             class_price = class_data[2]
 
-            n_seats = enter_seats(class_name)
+            n_seats = enter_seats(class_name, self.root)
 
             classes[class_id] = [class_name, class_price, n_seats]
 
