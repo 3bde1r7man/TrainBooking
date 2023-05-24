@@ -5,8 +5,8 @@ from Train import Train
 from Class import Class
 from Admin import Admin
 
-def enter_seats(class_name, root):
-    seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}",parent=root)
+def enter_seats(class_name, root = None):
+    seats = tk.simpledialog.askinteger("Enter Seats", f"Enter the number of seats for {class_name}", parent=root)
     return seats
 
 class AddTrain:
